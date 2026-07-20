@@ -1,0 +1,375 @@
+<title>Client Web — Croquis d'interface</title>
+<style>
+  :root {
+    --paper: #eef2f6;
+    --ink: #1d3f6e;
+    --ink-soft: rgba(29, 63, 110, 0.55);
+    --grid: rgba(29, 63, 110, 0.12);
+    --accent: #b8391b;
+    --accent-soft: rgba(184, 57, 27, 0.10);
+    --frame-bg: #ffffff;
+    --shadow: rgba(29, 63, 110, 0.18);
+    --font-display: "Bahnschrift", "Arial Narrow", "Helvetica Neue Condensed", "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0b2d52;
+      --ink: #dfeaf8;
+      --ink-soft: rgba(223, 234, 248, 0.6);
+      --grid: rgba(255, 255, 255, 0.09);
+      --accent: #ff9f5a;
+      --accent-soft: rgba(255, 159, 90, 0.14);
+      --frame-bg: rgba(255, 255, 255, 0.03);
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0b2d52;
+    --ink: #dfeaf8;
+    --ink-soft: rgba(223, 234, 248, 0.6);
+    --grid: rgba(255, 255, 255, 0.09);
+    --accent: #ff9f5a;
+    --accent-soft: rgba(255, 159, 90, 0.14);
+    --frame-bg: rgba(255, 255, 255, 0.03);
+    --shadow: rgba(0, 0, 0, 0.45);
+  }
+  :root[data-theme="light"] {
+    --paper: #eef2f6;
+    --ink: #1d3f6e;
+    --ink-soft: rgba(29, 63, 110, 0.55);
+    --grid: rgba(29, 63, 110, 0.12);
+    --accent: #b8391b;
+    --accent-soft: rgba(184, 57, 27, 0.10);
+    --frame-bg: #ffffff;
+    --shadow: rgba(29, 63, 110, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 3rem);
+    background-color: var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, var(--grid) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px 32px);
+    color: var(--ink);
+    font-family: var(--font-mono);
+  }
+
+  .sheet {
+    width: min(1180px, 100%);
+    border: 2px solid var(--ink);
+    padding: 6px;
+    background: var(--frame-bg);
+    box-shadow: 0 24px 70px var(--shadow);
+  }
+
+  .sheet-inner {
+    position: relative;
+    border: 1px solid var(--ink);
+    padding: clamp(1.25rem, 3vw, 2.75rem);
+    overflow-x: auto;
+  }
+
+  .crosshair { position: absolute; width: 18px; height: 18px; }
+  .crosshair::before, .crosshair::after { content: ""; position: absolute; background: var(--ink); }
+  .crosshair::before { width: 18px; height: 1px; top: 8px; left: 0; }
+  .crosshair::after { width: 1px; height: 18px; left: 8px; top: 0; }
+  .crosshair.tl { top: -9px; left: -9px; }
+  .crosshair.tr { top: -9px; right: -9px; }
+  .crosshair.bl { bottom: -9px; left: -9px; }
+  .crosshair.br { bottom: -9px; right: -9px; }
+
+  .sheet-title h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: clamp(1.25rem, 2.3vw, 1.85rem);
+    text-wrap: balance;
+    margin: 0;
+  }
+  .sheet-sub {
+    margin: 0.4rem 0 0;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  .views {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+    min-width: 640px;
+  }
+  @media (max-width: 720px) {
+    .views { grid-template-columns: 1fr; min-width: 0; }
+  }
+
+  .view-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  .view-label::before { content: "— "; }
+
+  .browser-frame {
+    border: 1px dashed var(--ink-soft);
+  }
+
+  .tabbar { display: flex; border-bottom: 1px dashed var(--ink-soft); }
+  .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    border-right: 1px dashed var(--ink-soft);
+  }
+  .tab--active {
+    color: var(--ink);
+    background: var(--accent-soft);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: -1px;
+  }
+
+  .toolbar { padding: 0.7rem; border-bottom: 1px dashed var(--ink-soft); }
+  .search-input {
+    border: 1px dashed var(--ink-soft);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+  }
+
+  .grid-row {
+    display: grid;
+    grid-template-columns: 2fr 1.4fr 0.8fr 1fr;
+    border-bottom: 1px dashed var(--grid);
+  }
+  .grid-row--head .cell {
+    text-transform: uppercase;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .cell {
+    padding: 0.55rem 0.6rem;
+    display: flex;
+    align-items: center;
+    border-right: 1px dashed var(--grid);
+  }
+  .cell:last-child { border-right: none; }
+
+  .greek {
+    display: inline-block;
+    height: 8px;
+    background: var(--ink-soft);
+    opacity: 0.4;
+  }
+  .g-20 { width: 20%; } .g-30 { width: 30%; } .g-40 { width: 40%; }
+  .g-50 { width: 50%; } .g-60 { width: 60%; } .g-70 { width: 70%; }
+  .g-80 { width: 80%; } .g-90 { width: 90%; }
+
+  .thread {
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 190px;
+  }
+  .bubble {
+    max-width: 78%;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border: 1px dashed var(--ink-soft);
+  }
+  .bubble--bot { align-self: flex-start; }
+  .bubble--user { align-self: flex-end; border-color: var(--accent); }
+
+  .composer {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-top: 1px dashed var(--ink-soft);
+  }
+  .composer-input {
+    flex: 1;
+    border: 1px dashed var(--ink-soft);
+    padding: 0.5rem 0.7rem;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+  }
+  .composer-send {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.5rem 0.9rem;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .callouts { margin-top: 0.85rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .callout { font-size: 0.72rem; color: var(--accent); position: relative; padding-left: 1rem; }
+  .callout::before { content: "»"; position: absolute; left: 0; }
+
+  .title-block {
+    margin-top: clamp(2rem, 4vw, 2.75rem);
+    border-top: 2px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    min-width: 640px;
+  }
+  @media (max-width: 720px) {
+    .title-block { grid-template-columns: repeat(2, 1fr); min-width: 0; }
+  }
+  .tb-cell {
+    padding: 0.7rem 0.9rem;
+    border-right: 1px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .tb-cell:last-child { border-right: none; }
+  .tb-k {
+    text-transform: uppercase;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  .tb-v {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+</style>
+
+<main class="page">
+  <div class="sheet">
+    <div class="sheet-inner">
+      <div class="crosshair tl"></div>
+      <div class="crosshair tr"></div>
+      <div class="crosshair bl"></div>
+      <div class="crosshair br"></div>
+
+      <header class="sheet-title">
+        <h1>Client Web — Interface publique</h1>
+        <p class="sheet-sub">Croquis d'agencement — boîte de recherche façon Excel &amp; espace de chat (structure seulement, aucun contenu final)</p>
+      </header>
+
+      <div class="views">
+        <section class="view">
+          <div class="view-label">Onglet « Recherche »</div>
+          <div class="browser-frame">
+            <div class="tabbar">
+              <div class="tab tab--active">Recherche</div>
+              <div class="tab">Chat</div>
+            </div>
+            <div class="toolbar">
+              <div class="search-input">Rechercher un produit, une succursale…</div>
+            </div>
+            <div class="grid">
+              <div class="grid-row grid-row--head">
+                <div class="cell">Produit</div>
+                <div class="cell">Succursale</div>
+                <div class="cell">Qté</div>
+                <div class="cell">Détails</div>
+              </div>
+              <div class="grid-row">
+                <div class="cell"><span class="greek g-60"></span></div>
+                <div class="cell"><span class="greek g-40"></span></div>
+                <div class="cell"><span class="greek g-20"></span></div>
+                <div class="cell"><span class="greek g-30"></span></div>
+              </div>
+              <div class="grid-row">
+                <div class="cell"><span class="greek g-70"></span></div>
+                <div class="cell"><span class="greek g-50"></span></div>
+                <div class="cell"><span class="greek g-20"></span></div>
+                <div class="cell"><span class="greek g-30"></span></div>
+              </div>
+              <div class="grid-row">
+                <div class="cell"><span class="greek g-50"></span></div>
+                <div class="cell"><span class="greek g-40"></span></div>
+                <div class="cell"><span class="greek g-20"></span></div>
+                <div class="cell"><span class="greek g-30"></span></div>
+              </div>
+              <div class="grid-row">
+                <div class="cell"><span class="greek g-80"></span></div>
+                <div class="cell"><span class="greek g-40"></span></div>
+                <div class="cell"><span class="greek g-20"></span></div>
+                <div class="cell"><span class="greek g-30"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="callouts">
+            <div class="callout">Barre de recherche (filtre produit / succursale)</div>
+            <div class="callout">Tableau façon Excel — colonnes triables</div>
+          </div>
+        </section>
+
+        <section class="view">
+          <div class="view-label">Onglet « Chat »</div>
+          <div class="browser-frame">
+            <div class="tabbar">
+              <div class="tab">Recherche</div>
+              <div class="tab tab--active">Chat</div>
+            </div>
+            <div class="thread">
+              <div class="bubble bubble--bot">
+                <span class="greek g-80"></span>
+                <span class="greek g-50"></span>
+              </div>
+              <div class="bubble bubble--user">
+                <span class="greek g-40"></span>
+              </div>
+              <div class="bubble bubble--bot">
+                <span class="greek g-90"></span>
+                <span class="greek g-70"></span>
+                <span class="greek g-30"></span>
+              </div>
+            </div>
+            <div class="composer">
+              <div class="composer-input">Poser une question sur le stock…</div>
+              <div class="composer-send">Envoyer</div>
+            </div>
+          </div>
+          <div class="callouts">
+            <div class="callout">Fil de conversation — logique du bot gérée par l'équipe IA</div>
+            <div class="callout">Champ de saisie + bouton d'envoi</div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="title-block">
+        <div class="tb-cell">
+          <span class="tb-k">Projet</span>
+          <span class="tb-v">HBNTORY — Client Web</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-k">Contenu</span>
+          <span class="tb-v">Croquis recherche + chat</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-k">Version</span>
+          <span class="tb-v">0.1 — brouillon</span>
+        </div>
+        <div class="tb-cell">
+          <span class="tb-k">Statut</span>
+          <span class="tb-v">Agencement uniquement</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+</main>
