@@ -26,7 +26,7 @@ cd product_mcp_server
 python3 -m venv venv
 
 # 3. Activer le venv
-source venv/bin/activate  # Sur Linux/macOS/WSL
+source venv/bin/activate
 
 # 4. Installer les dépendances
 pip install -r requirements.txt
