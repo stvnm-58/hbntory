@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/mnt/c/Users/stvnm/Desktop/Espace travail/hbntory/product_mcp_server/venv/bin/python3" "$0" "$@"
-' '''
+#!/mnt/c/Users/stvnm/Desktop/Projets/espace_travail/hbntory/product_mcp_server/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
