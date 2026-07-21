@@ -1,116 +1,88 @@
 from werkzeug.security import generate_password_hash
 
-from app import create_app
 from database.db import db
-
 from models.user import User
 from models.branch import Branch
 from models.stock import Stock
 
 
-def seed_database():
+def seed():
 
-    app = create_app()
+    bordeaux = Branch(
+        name="Bordeaux",
+        location="Bordeaux"
+    )
 
-    with app.app_context():
+    paris = Branch(
+        name="Paris",
+        location="Paris"
+    )
 
-        # Nettoyage optionnel
-        db.drop_all()
-        db.create_all()
+    db.session.add_all([
+        bordeaux,
+        paris
+    ])
 
-
-        # Création des branches
-
-        bordeaux = Branch(
-            name="Bordeaux",
-            location="Bordeaux"
-        )
-
-        paris = Branch(
-            name="Paris",
-            location="Paris"
-        )
+    db.session.commit()
 
 
-        db.session.add(bordeaux)
-        db.session.add(paris)
-
-        db.session.commit()
-
-
-        # Création admin
-
-        admin = User(
-            username="admin",
-            email="admin@hbntory.com",
-            password_hash=generate_password_hash(
-                "admin123"
-            ),
-            role="admin",
-            branch_id=None,
-            is_deleted=False
-        )
+    admin = User(
+        username="admin",
+        email="admin@hbntory.com",
+        password_hash=generate_password_hash(
+            "admin123"
+        ),
+        role="admin",
+        branch_id=None,
+        is_deleted=False
+    )
 
 
-        db.session.add(admin)
+    employee = User(
+        username="employee",
+        email="employee@hbntory.com",
+        password_hash=generate_password_hash(
+            "employee123"
+        ),
+        role="employee",
+        branch_id=bordeaux.id,
+        is_deleted=False
+    )
 
 
-        # Création utilisateur test
+    db.session.add_all([
+        admin,
+        employee
+    ])
 
-        employee = User(
-            username="employee",
-            email="employee@hbntory.com",
-            password_hash=generate_password_hash(
-                "employee123"
-            ),
-            role="employee",
+
+    db.session.commit()
+
+
+    stocks = [
+        Stock(
             branch_id=bordeaux.id,
-            is_deleted=False
-        )
-
-
-        db.session.add(employee)
-
-        db.session.commit()
-
-
-        # Stock de test
-
-        stock1 = Stock(
-            branch_id=bordeaux.id,
-            product_id=1,
-            quantity=20
-        )
-
-
-        stock2 = Stock(
-            branch_id=bordeaux.id,
-            product_id=2,
-            quantity=15
-        )
-
-
-        stock3 = Stock(
-            branch_id=paris.id,
-            product_id=1,
+            product_sku="HB-LAP-1001",
             quantity=10
+        ),
+
+        Stock(
+            branch_id=bordeaux.id,
+            product_sku="HB-MON-2001",
+            quantity=5
+        ),
+
+        Stock(
+            branch_id=paris.id,
+            product_sku="HB-LAP-1001",
+            quantity=3
         )
+    ]
 
 
-        db.session.add_all(
-            [
-                stock1,
-                stock2,
-                stock3
-            ]
-        )
+    db.session.add_all(stocks)
+
+    db.session.commit()
 
 
-        db.session.commit()
-
-
-        print("Database seeded successfully!")
-
-
-if __name__ == "__main__":
-    seed_database()
+    print("Database initialized")
