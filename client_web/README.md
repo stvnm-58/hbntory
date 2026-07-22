@@ -1,6 +1,6 @@
 # Client Web
 
-Interface publique du projet HBntory : une page permettant à n'importe quel visiteur (anonyme, pas de connexion) de rechercher des produits/du stock ou de poser une question en langage naturel à un assistant.
+Interface publique du projet HBntory : une page permettant à n'importe quel visiteur (anonyme, pas de connexion) de rechercher des produits/du stock ou de poser une question en langage naturel à un assistant IA.
 
 HTML / CSS / JS simple, sans framework ni dépendance.
 
