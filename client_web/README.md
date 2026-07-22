@@ -27,12 +27,17 @@ python3 -m http.server 8000
 
 Puis ouvrir `http://localhost:8000` dans un navigateur.
 
+## Exemples de questions (chat)
+
+- **Détails produit** : « Donne-moi les détails du produit XX. »
+- **Disponibilité par succursale** : « Quelle succursale a le stock du produit X ? »
+- **Produits d'une succursale** : « Quels produits puis-je trouver dans la succursale Y ? »
+- **Liste d'achats** : « Si je veux acheter 3 unités de X, 2 unités de Y et 4 unités de Z, quelle(s) succursale(s) devrais-je visiter ? »
+
 ## État de l'intégration
 
-La recherche (`fetchResults`) et le chat (`askBot`) sont pour l'instant des **stubs** : l'interface fonctionne déjà (onglets, bulle, envoi de message) mais aucune donnée réelle n'est encore récupérée.
+Le chat (`askBot` dans `js/chat.js`) appelle déjà `fetch(...)` vers `ai_service` (feedback de chargement + message d'erreur si le service ne répond pas). Il ne reste qu'à renseigner `AI_SERVICE_URL` une fois `ai_service` disponible.
 
-Une fois `ai_service` disponible :
-1. Renseigner `API_BASE_URL` dans `js/app.js`.
-2. Faire appeler `apiFetch(...)` par `fetchResults()` et `askBot()` au lieu de leurs valeurs stub.
+La recherche (`fetchResults` dans `js/search.js`) est encore un stub à brancher de la même façon.
 
 Le front ne communique jamais directement avec le serveur MCP — uniquement avec `ai_service`.
