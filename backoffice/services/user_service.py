@@ -73,7 +73,6 @@ def delete_user(user_id):
         return False
 
 
-    # Soft delete demandé dans le projet
     user.is_deleted = True
 
     db.session.commit()
