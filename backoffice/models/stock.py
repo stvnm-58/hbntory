@@ -1,21 +1,10 @@
-from datetime import datetime
-
-from sqlalchemy import CheckConstraint
-
 from database.db import db
+from datetime import datetime
 
 
 class Stock(db.Model):
 
-    __tablename__ = "stock"
-
-
-    __table_args__ = (
-        CheckConstraint(
-            "quantity >= 0",
-            name="check_quantity_positive"
-        ),
-    )
+    __tablename__ = "stocks"
 
 
     id = db.Column(
@@ -31,8 +20,6 @@ class Stock(db.Model):
     )
 
 
-    # Référence vers le Product API
-    # Exemple : HB-LAP-1001
     product_sku = db.Column(
         db.String(100),
         nullable=False
@@ -41,7 +28,6 @@ class Stock(db.Model):
 
     quantity = db.Column(
         db.Integer,
-        nullable=False,
         default=0
     )
 
@@ -57,3 +43,18 @@ class Stock(db.Model):
         default=datetime.utcnow,
         onupdate=datetime.utcnow
     )
+
+
+    def to_dict(self):
+
+        return {
+
+            "id": self.id,
+
+            "branch_id": self.branch_id,
+
+            "product_sku": self.product_sku,
+
+            "quantity": self.quantity
+
+        }
