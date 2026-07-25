@@ -1,59 +1,64 @@
 from models.user import User
-from database.db import db
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token
 
 
 def authenticate_user(email, password):
-    """
-    Vérifie les identifiants d'un utilisateur
-    """
 
     user = User.query.filter_by(
-        email=email,
-        is_deleted=False
+        email=email
     ).first()
 
     if not user:
         return None
 
-    if not check_password_hash(user.password_hash, password):
+    if user.is_deleted:
+        return None
+
+    if not check_password_hash(
+        user.password_hash,
+        password
+    ):
         return None
 
     return user
 
 
 
-def generate_token(user):
-    """
-    Génère un JWT
-    """
+def create_token(user):
 
-    token = create_access_token(
-        identity={
-            "id": user.id,
-            "email": user.email,
-            "role": user.role
-        }
+    return create_access_token(
+        identity=user.id
     )
 
-    return token
 
 
+def login_user(email, password):
 
-def login(email, password):
-    """
-    Fonction complète de connexion
-    """
-
-    user = authenticate_user(email, password)
+    user = authenticate_user(
+        email,
+        password
+    )
 
     if not user:
         return None
 
-    token = generate_token(user)
+
+    token = create_token(user)
+
 
     return {
-        "user": user,
-        "token": token
+        "access_token": token,
+        "user": user
     }
+def get_user_from_token(user_id):
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return None
+
+    if user.is_deleted:
+        return None
+
+    return user
