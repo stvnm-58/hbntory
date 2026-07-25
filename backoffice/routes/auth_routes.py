@@ -2,11 +2,15 @@ from flask import Blueprint
 
 from controllers.auth_controller import (
     login,
-    me
+    register
 )
 
 
-auth_bp = Blueprint("auth", __name__)
+auth_bp = Blueprint(
+    "auth",
+    __name__
+)
+
 
 
 auth_bp.route(
@@ -15,7 +19,8 @@ auth_bp.route(
 )(login)
 
 
+
 auth_bp.route(
-    "/me",
-    methods=["GET"]
-)(me)
+    "/register",
+    methods=["POST"]
+)(register)

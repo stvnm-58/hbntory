@@ -1,64 +1,76 @@
 from models.user import User
-from werkzeug.security import check_password_hash
+from database.db import db
+
 from flask_jwt_extended import create_access_token
-
-
-def authenticate_user(email, password):
-
-    user = User.query.filter_by(
-        email=email
-    ).first()
-
-    if not user:
-        return None
-
-    if user.is_deleted:
-        return None
-
-    if not check_password_hash(
-        user.password_hash,
-        password
-    ):
-        return None
-
-    return user
-
-
-
-def create_token(user):
-
-    return create_access_token(
-        identity=user.id
-    )
 
 
 
 def login_user(email, password):
 
-    user = authenticate_user(
-        email,
-        password
-    )
+    user = User.query.filter_by(
+        email=email,
+        is_deleted=False
+    ).first()
+
 
     if not user:
         return None
 
 
-    token = create_token(user)
+    if not user.check_password(password):
+        return None
+
+
+    token = create_access_token(
+        identity={
+            "id": user.id,
+            "role": user.role
+        }
+    )
 
 
     return {
-        "access_token": token,
-        "user": user
+        "token": token,
+        "user": user.to_dict()
     }
-def get_user_from_token(user_id):
 
-    user = User.query.get(user_id)
 
-    if not user:
+
+
+def create_user(
+    email,
+    password,
+    role="employee",
+    branch_id=None
+):
+
+    existing = User.query.filter_by(
+        email=email
+    ).first()
+
+
+    if existing:
         return None
 
-    if user.is_deleted:
-        return None
+
+
+    user = User(
+
+        email=email,
+
+        role=role,
+
+        branch_id=branch_id
+
+    )
+
+
+    user.set_password(password)
+
+
+    db.session.add(user)
+
+    db.session.commit()
+
 
     return user
