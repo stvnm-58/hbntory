@@ -1,22 +1,24 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Config:
-    """
-    Configuration générale du Backoffice
-    """
 
-    # Clé utilisée par Flask pour les sessions/JWT plus tard
-    SECRET_KEY = os.environ.get(
-        "SECRET_KEY",
-        "dev-secret-key"
-    )
-
-    # Base de données locale pour le développement
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
+    SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
         "sqlite:///hbntory.db"
     )
 
-    # Désactive les notifications inutiles de SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    JWT_SECRET_KEY = os.getenv(
+        "JWT_SECRET_KEY",
+        "dev-secret-key"
+    )
+
+    PRODUCT_API_URL = os.getenv(
+        "PRODUCT_API_URL",
+        "http://localhost:5001"
+    )
