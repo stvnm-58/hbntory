@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os
 import requests
 from mcp.server.fastmcp import FastMCP
@@ -45,4 +46,21 @@ def get_external_product(sku: str) -> str:
 
 if __name__ == "__main__":
     # Lancement obligatoire en mode stdio pour la communication avec l'IA
+=======
+from mcp.server.fastmcp import FastMCP
+import httpx
+
+# Création du serveur MCP
+mcp = FastMCP("ProductServer")
+
+@mcp.tool()
+async def get_external_product(product_ref: str) -> dict:
+    """Récupère les informations d'un produit depuis l'API externe."""
+    async with httpx.AsyncClient() as client:
+        # URL mise à jour avec le port 5001 et la route /api/v1/products/
+        response = await client.get(f"http://localhost:5001/api/v1/products/{product_ref}")
+        return response.json()
+
+if __name__ == "__main__":
+>>>>>>> 7d4f579 (fix de agent.py pour passer sur ollama qwen et fix server.py. Création API : app.py)
     mcp.run(transport="stdio")
