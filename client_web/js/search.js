@@ -36,8 +36,21 @@ function renderResults(results) {
 }
 
 async function fetchResults(query) {
-  // Point d'intégration : appel à l'API produit / stock.
-  return [];
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/search?q=${encodeURIComponent(query)}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la recherche");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {

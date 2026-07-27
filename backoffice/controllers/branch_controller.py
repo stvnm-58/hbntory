@@ -25,8 +25,8 @@ def get_branch(branch_id):
         }), 404
 
     return jsonify({
-        "id": branch_id
-        "name": branch_name
+        "id": branch_id,
+        "name": branch_name,
         "location": branch.location
     }), 200
 
