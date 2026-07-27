@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from services.auth_service import login_user, create_user
-
+from flask_jwt_extended import JWTManager
 
 
 def login():
@@ -51,12 +51,6 @@ def register():
         )
 
     )
-
-
-    if not email or not password:
-        return jsonify({"error": "Email or password are required"}), 400
-
-    user = User.query.filter_by(email=email).first()
 
     if not user:
 
