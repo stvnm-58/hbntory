@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     errorEl.hidden = true;
 
-    const email = document.getElementById("email").value.trim();
+    const identifier = document.getElementById("identifier").value.trim();
     const password = document.getElementById("password").value;
 
     submitButton.disabled = true;
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: identifier, password }),
       });
 
       const data = await response.json();

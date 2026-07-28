@@ -96,15 +96,21 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     errorEl.hidden = true;
 
-    const email = document.getElementById("employee-email").value.trim();
+    const identifier = document.getElementById("employee-identifier").value.trim();
     const password = document.getElementById("employee-password").value;
     const branchValue = document.getElementById("employee-branch").value;
+
+    if (!identifier.includes("@") && identifier.length > 12) {
+      errorEl.textContent = "Un nom (sans email) ne doit pas dépasser 12 caractères.";
+      errorEl.hidden = false;
+      return;
+    }
 
     try {
       await apiFetch("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({
-          email,
+          email: identifier,
           password,
           role: "employee",
           branch_id: branchValue ? Number(branchValue) : null,
