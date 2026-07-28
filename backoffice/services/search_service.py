@@ -13,7 +13,8 @@ def search_products(query):
     response = requests.get(
         PRODUCT_API_URL,
         params={
-            "q": query
+            "q": query,
+            "limit": 100
         },
         timeout=5
     )
