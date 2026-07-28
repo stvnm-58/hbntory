@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestion du stock – Stock and CO</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header dashboard-header">
+    <div>
+      <h1>Stock and CO</h1>
+      <p class="app-sub">Espace employé — gestion du stock</p>
+    </div>
+    <button type="button" class="btn btn-secondary" id="logout-btn">Se déconnecter</button>
+  </header>
+
+  <main>
+    <section class="view section-card">
+      <h2>Ajouter un article</h2>
+      <form id="add-stock-form" class="inline-form">
+        <input type="text" id="stock-sku" placeholder="SKU produit" required />
+        <input type="number" id="stock-branch" placeholder="ID succursale" min="1" required />
+        <input type="number" id="stock-quantity" placeholder="Quantité" min="0" value="0" />
+        <button type="submit">Ajouter</button>
+      </form>
+      <p class="form-error" id="stock-error" hidden></p>
+    </section>
+
+    <section class="view section-card">
+      <h2>Stock actuel</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>SKU produit</th>
+              <th>Succursale (ID)</th>
+              <th>Quantité</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="stock-body"></tbody>
+        </table>
+        <p class="empty-state" id="stock-empty" hidden>Aucun article en stock.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/stock-manager.js"></script>
+</body>
+</html>

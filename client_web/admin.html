@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Espace Admin – Stock and CO</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header dashboard-header">
+    <div>
+      <h1>Stock and CO</h1>
+      <p class="app-sub">Espace administrateur</p>
+    </div>
+    <button type="button" class="btn btn-secondary" id="logout-btn">Se déconnecter</button>
+  </header>
+
+  <main>
+    <section class="view section-card">
+      <h2>Stock (lecture seule)</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>SKU produit</th>
+              <th>Succursale (ID)</th>
+              <th>Quantité</th>
+            </tr>
+          </thead>
+          <tbody id="stock-body"></tbody>
+        </table>
+        <p class="empty-state" id="stock-empty" hidden>Aucun article en stock.</p>
+      </div>
+    </section>
+
+    <section class="view section-card">
+      <h2>Employés</h2>
+
+      <form id="add-employee-form" class="inline-form">
+        <input type="email" id="employee-email" placeholder="Email de l'employé" required />
+        <input type="password" id="employee-password" placeholder="Mot de passe" required />
+        <input type="number" id="employee-branch" placeholder="ID succursale" min="1" />
+        <button type="submit">Ajouter</button>
+      </form>
+      <p class="form-error" id="employee-error" hidden></p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Succursale (ID)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="employees-body"></tbody>
+        </table>
+        <p class="empty-state" id="employees-empty" hidden>Aucun employé pour l'instant.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
