@@ -1,44 +1,44 @@
-import asyncio
-from langchain_mcp_adapters.tools import load_mcp_tools
-from langchain_openai import ChatOpenAI
-from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain_core.prompts import ChatPromptTemplate
+import os
+import requests
+from mcp.server.fastmcp import FastMCP
 
-async def run_agent(user_query: str):
-    # 1. Indiquer comment lancer le serveur MCP (situé au même endroit)
-    server_params = {
-        "command": "python3",
-        "args": ["server.py"],
-        "transport": "stdio"
-    }
+# 1. Initialisation du serveur FastMCP
+mcp = FastMCP("HBntory-Product-Catalog")
 
-    # 2. Charger l'outil get_external_product depuis server.py
-    tools = await load_mcp_tools(server_params)
+# URL de l'API externe (Docker sur le port 5001)
+EXTERNAL_API_URL = os.getenv("EXTERNAL_API_URL", "http://localhost:5001")
 
-    # 3. Initialiser LLM (OpenAI)
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+@mcp.tool()
+def get_external_product(sku: str) -> str:
+    """
+    Récupère les détails d'un produit (nom, prix, catégorie, marque) 
+    depuis le catalogue externe en utilisant son SKU (ex: 'HB-LAP-1001').
+    """
+    url = f"{EXTERNAL_API_URL}/api/v1/products/{sku}"
+    
+    try:
+        response = requests.get(url, timeout=2.5)
+        response.raise_for_status()
+        
+        product_data = response.json()
+        
+        return (
+            f"Détails du produit du catalogue externe :\n"
+            f"- SKU : {product_data.get('sku')}\n"
+            f"- Nom : {product_data.get('name')}\n"
+            f"- Marque : {product_data.get('brand')}\n"
+            f"- Catégorie : {product_data.get('category')}\n"
+            f"- Prix de base : {product_data.get('unit_price')} {product_data.get('currency')}\n"
+            f"- Statut catalogue : {'Discontinué' if product_data.get('discontinued') else 'Disponible'}"
+        )
+        
+    except requests.exceptions.Timeout:
+        return "Erreur : L'API externe du catalogue est trop lente à répondre (Timeout)."
+    except requests.exceptions.HTTPError as e:
+        return f"Erreur : L'API externe a renvoyé une anomalie (Code HTTP {e.response.status_code})."
+    except requests.exceptions.RequestException as e:
+        return f"Erreur critique : Impossible de joindre l'API externe. Est-elle bien lancée sur le port 5001 ? Détail : {str(e)}"
 
-    # 4. Prompt de base pour l'agent
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "Tu es un assistant IA d'inventaire. Utilise tes outils pour chercher des produits."),
-        ("human", "{input}"),
-        ("placeholder", "{agent_scratchpad}"),
-    ])
-
-    # 5. Assembler l'agent
-    agent = create_tool_calling_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-    # 6. Exécuter la requête
-    response = await agent_executor.ainvoke({"input": user_query})
-    return response["output"]
-
-# Bloc pour tester le fichier directement dans le terminal
 if __name__ == "__main__":
-    test_query = "Donne-moi les détails du produit HB-LAP-1001"
-    
-    print("🚀 Lancement de l'agent...")
-    resultat = asyncio.run(run_agent(test_query))
-    
-    print("\n🤖 Réponse de l'Agent :\n")
-    print(resultat)
+    # Lancement exclusif en mode stdio pour servir de sous-processus MCP
+    mcp.run(transport="stdio")
