@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from services.auth_service import login_user, create_user
-
+from flask_jwt_extended import JWTManager
 
 
 def login():
@@ -51,7 +51,6 @@ def register():
         )
 
     )
-
 
     if not user:
 
