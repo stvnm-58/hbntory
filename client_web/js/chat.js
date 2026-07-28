@@ -48,10 +48,10 @@ function resolveBubble(bubble, role, text) {
 const AI_SERVICE_URL = "http://localhost:8000";
 
 async function askBot(question) {
-  const response = await fetch(`${AI_SERVICE_URL}/api/chat`, {
+  const response = await fetch(`${AI_SERVICE_URL}/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: question }),
+    body: JSON.stringify({ question }),
   });
 
   if (!response.ok) {
@@ -59,7 +59,7 @@ async function askBot(question) {
   }
 
   const data = await response.json();
-  return data.response;
+  return data.answer;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
