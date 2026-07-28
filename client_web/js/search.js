@@ -48,19 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("search-input");
   const emptyState = document.getElementById("empty-state");
 
-  input.addEventListener("input", async () => {
-    const query = input.value.trim();
-
-    if (!query) {
-      emptyState.textContent = "Aucun résultat pour l'instant. Lancez une recherche.";
-      renderResults([]);
-      return;
-    }
-
+  async function performSearch(query) {
     const results = await fetchResults(query);
-    if (!results.length) {
-      emptyState.textContent = "Aucun résultat trouvé.";
-    }
+    emptyState.textContent = "Aucun résultat trouvé.";
     renderResults(results);
+  }
+
+  input.addEventListener("input", () => {
+    performSearch(input.value.trim());
   });
+
+  performSearch("");
 });
