@@ -17,7 +17,7 @@ function renderResults(results) {
     produitCell.textContent = item.produit;
 
     const succursaleCell = document.createElement("td");
-    succursaleCell.textContent = item.succursale;
+    succursaleCell.textContent = item.id;
 
     const quantiteCell = document.createElement("td");
     quantiteCell.textContent = item.quantite;
