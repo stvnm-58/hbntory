@@ -45,14 +45,13 @@ function resolveBubble(bubble, role, text) {
   thread.scrollTop = thread.scrollHeight;
 }
 
-// TODO: remplacer par l'URL réelle de ai_service une fois connue (ex: "http://localhost:8000").
-const AI_SERVICE_URL = "";
+const AI_SERVICE_URL = "http://localhost:8000";
 
 async function askBot(question) {
-  const response = await fetch(`${AI_SERVICE_URL}/ask`, {
+  const response = await fetch(`${AI_SERVICE_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ message: question }),
   });
 
   if (!response.ok) {
@@ -60,7 +59,7 @@ async function askBot(question) {
   }
 
   const data = await response.json();
-  return data.answer;
+  return data.response;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
