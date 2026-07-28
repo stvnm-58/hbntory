@@ -4,7 +4,7 @@ from flask import jsonify
 
 from flask_jwt_extended import (
     verify_jwt_in_request,
-    get_jwt_identity
+    get_jwt
 )
 
 
@@ -57,10 +57,10 @@ def admin_required(func):
 
 
 
-        user = get_jwt_identity()
+        claims = get_jwt()
 
 
-        if user["role"] != "admin":
+        if claims.get("role") != "admin":
 
             return jsonify(
                 {

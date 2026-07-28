@@ -22,8 +22,8 @@ def login_user(email, password):
 
 
     token = create_access_token(
-        identity={
-            "id": user.id,
+        identity=str(user.id),
+        additional_claims={
             "role": user.role
         }
     )
