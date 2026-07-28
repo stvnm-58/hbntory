@@ -48,6 +48,11 @@ def create_app():
 
     return app
 
+@app.after_request
+
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 if __name__ == "__main__":
