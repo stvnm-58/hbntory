@@ -9,7 +9,7 @@
 <body>
   <header class="app-header">
     <h1>Stock and CO</h1>
-    <p class="app-sub">Recherchez dans le stock ou posez une question en langage naturel.</p>
+    <p class="app-sub">Recherchez dans le stock ou posez une question.</p>
   </header>
 
   <main>
@@ -22,7 +22,7 @@
           <thead>
             <tr>
               <th>Produit</th>
-              <th>Succursale</th>
+              <th>id</th>
               <th>Qté</th>
               <th>Détails</th>
             </tr>
@@ -55,7 +55,9 @@
       <span>Assistant produits &amp; stock</span>
       <button type="button" class="chat-panel-close" id="chat-panel-close" aria-label="Fermer le chat">&times;</button>
     </div>
-    <div class="thread" id="chat-thread">
+
+    <div class="thread" id="chat-thread" aria-live="polite">
+
       <div class="bubble bubble--bot">
         <p>Bonjour ! Posez-moi une question sur les produits ou le stock.</p>
       </div>

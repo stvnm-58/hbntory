@@ -10,11 +10,57 @@ function appendMessage(role, text) {
   bubble.appendChild(p);
   thread.appendChild(bubble);
   thread.scrollTop = thread.scrollHeight;
+  return bubble;
 }
 
+function appendLoadingBubble() {
+  const thread = document.getElementById("chat-thread");
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble bubble--loading";
+
+  const p = document.createElement("p");
+  p.setAttribute("aria-label", "L'assistant réfléchit");
+  for (let i = 0; i < 3; i += 1) {
+    const dot = document.createElement("span");
+    dot.className = "typing-dot";
+    p.appendChild(dot);
+  }
+
+  bubble.appendChild(p);
+  thread.appendChild(bubble);
+  thread.scrollTop = thread.scrollHeight;
+  return bubble;
+}
+
+function resolveBubble(bubble, role, text) {
+  bubble.className = `bubble bubble--${role}`;
+  bubble.innerHTML = "";
+
+  const p = document.createElement("p");
+  p.textContent = text;
+  bubble.appendChild(p);
+
+  const thread = document.getElementById("chat-thread");
+  thread.scrollTop = thread.scrollHeight;
+}
+
+// TODO: remplacer par l'URL réelle de ai_service une fois connue (ex: "http://localhost:8000").
+const AI_SERVICE_URL = "";
+
 async function askBot(question) {
-  // Point d'intégration : appel au service de requête IA.
-  return "…";
+  const response = await fetch(`${AI_SERVICE_URL}/ask`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Erreur du service IA (code ${response.status})`);
+  }
+
+  const data = await response.json();
+  return data.answer;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -160,6 +206,8 @@ document.addEventListener("DOMContentLoaded", () => {
     snapToNearestEdge();
   });
 
+  const submitButton = form.querySelector('button[type="submit"]');
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const question = input.value.trim();
@@ -167,8 +215,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     appendMessage("user", question);
     input.value = "";
+    input.disabled = true;
+    submitButton.disabled = true;
 
-    const answer = await askBot(question);
-    appendMessage("bot", answer);
+    const loadingBubble = appendLoadingBubble();
+
+    try {
+      const answer = await askBot(question);
+      resolveBubble(loadingBubble, "bot", answer);
+    } catch (error) {
+      resolveBubble(
+        loadingBubble,
+        "error",
+        "Désolé, l'assistant est indisponible pour le moment. Réessayez dans un instant."
+      );
+    } finally {
+      input.disabled = false;
+      submitButton.disabled = false;
+      input.focus();
+    }
   });
 });
