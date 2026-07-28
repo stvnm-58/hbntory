@@ -14,20 +14,20 @@ function renderResults(results) {
     const row = document.createElement("tr");
 
     const produitCell = document.createElement("td");
-    produitCell.textContent = item.produit;
+    produitCell.textContent = item.name; 
 
     const succursaleCell = document.createElement("td");
-    succursaleCell.textContent = item.id;
+    succursaleCell.textContent = item.branch_name;
 
     const quantiteCell = document.createElement("td");
-    quantiteCell.textContent = item.quantite;
+    quantiteCell.textContent = item.quantity;
 
     const detailsCell = document.createElement("td");
     const detailsBtn = document.createElement("button");
     detailsBtn.type = "button";
     detailsBtn.className = "link-btn";
     detailsBtn.textContent = "Voir";
-    detailsBtn.dataset.id = item.id;
+    detailsBtn.dataset.id = item.sku;
     detailsCell.appendChild(detailsBtn);
 
     row.append(produitCell, succursaleCell, quantiteCell, detailsCell);
