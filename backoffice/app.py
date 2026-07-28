@@ -46,13 +46,13 @@ def create_app():
         db.create_all()
 
 
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
+
+
     return app
-
-@app.after_request
-
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
 
 
 if __name__ == "__main__":
