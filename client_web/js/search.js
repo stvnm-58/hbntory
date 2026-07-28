@@ -48,7 +48,6 @@ async function fetchResults(query) {
     return await response.json();
   } catch (error) {
     console.error(error);
-    return [];
   }
 
 }
