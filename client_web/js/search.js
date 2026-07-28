@@ -37,19 +37,11 @@ function renderResults(results) {
 
 async function fetchResults(query) {
   try {
-    const response = await fetch(
-      `http://localhost:5000/api/search?q=${encodeURIComponent(query)}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de la recherche");
-    }
-
-    return await response.json();
+    return await apiFetch(`/api/search?q=${encodeURIComponent(query)}`);
   } catch (error) {
     console.error(error);
+    return [];
   }
-
 }
 
 document.addEventListener("DOMContentLoaded", () => {
