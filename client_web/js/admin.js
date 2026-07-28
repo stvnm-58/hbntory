@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("logout-btn").addEventListener("click", () => {
     clearSession();
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   });
 
   const addForm = document.getElementById("add-employee-form");

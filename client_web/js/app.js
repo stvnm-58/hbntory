@@ -24,7 +24,7 @@ function requireSession(role) {
   const session = getSession();
 
   if (!session) {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
     return null;
   }
 
@@ -50,7 +50,7 @@ async function apiFetch(path, options = {}) {
 
   if (response.status === 401) {
     clearSession();
-    window.location.href = "login.html";
+    window.location.href = "index.html";
     throw new Error("Session expirée, veuillez vous reconnecter.");
   }
 
