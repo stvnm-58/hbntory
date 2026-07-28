@@ -6,6 +6,7 @@ from database.db import db
 from routes.auth_routes import auth_bp
 from routes.user_routes import user_bp
 from routes.stock_routes import stock_bp
+from routes.search_routes import search_bp
 
 
 def create_app():
@@ -30,6 +31,11 @@ def create_app():
     app.register_blueprint(
         stock_bp,
         url_prefix="/api/stocks"
+    )
+
+    app.register_blueprint(
+        search_bp,
+        url_prefix="/api/search"
     )
 
 
