@@ -1,6 +1,4 @@
-// TODO: remplacer par l'URL du serveur MCP (HTTP) fourni par l'équipe backend.
-// Exemple : "http://localhost:8000"
-const API_BASE_URL = "";
+const API_BASE_URL = "http://localhost:5000";
 
 async function apiFetch(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
