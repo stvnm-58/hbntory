@@ -2,10 +2,10 @@ import os
 import requests
 from mcp.server.fastmcp import FastMCP
 
-# 1. Initialisation du serveur FastMCP
+# Initialisation du serveur FastMCP
 mcp = FastMCP("HBntory-Product-Catalog")
 
-# URL de l'API externe (Docker sur le port 5001)
+# URL de l'API externe (Docker sur le port 5001 par défaut)
 EXTERNAL_API_URL = os.getenv("EXTERNAL_API_URL", "http://localhost:5001")
 
 @mcp.tool()
@@ -37,8 +37,7 @@ def get_external_product(sku: str) -> str:
     except requests.exceptions.HTTPError as e:
         return f"Erreur : L'API externe a renvoyé une anomalie (Code HTTP {e.response.status_code})."
     except requests.exceptions.RequestException as e:
-        return f"Erreur critique : Impossible de joindre l'API externe. Est-elle bien lancée sur le port 5001 ? Détail : {str(e)}"
+        return f"Erreur critique : Impossible de joindre l'API externe (Port 5001). Détail : {str(e)}"
 
 if __name__ == "__main__":
-    # Lancement exclusif en mode stdio pour servir de sous-processus MCP
     mcp.run(transport="stdio")
