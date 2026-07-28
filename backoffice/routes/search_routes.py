@@ -11,5 +11,6 @@ search_bp = Blueprint(
 
 search_bp.route(
     "/",
-    methods=["GET"]
+    methods=["GET"],
+    strict_slashes=False
 )(search)
