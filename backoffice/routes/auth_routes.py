@@ -11,6 +11,8 @@ auth_bp = Blueprint(
     __name__
 )
 
+# Routes publiques, aucun JWT requis pour se connecter ou s'inscrire
+
 
 
 auth_bp.route(

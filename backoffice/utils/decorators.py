@@ -10,7 +10,7 @@ from flask_jwt_extended import (
 
 
 def jwt_required_custom(func):
-
+    # Exige un JWT valide, sans contrainte de rôle
     @wraps(func)
     def wrapper(*args, **kwargs):
 
@@ -38,7 +38,7 @@ def jwt_required_custom(func):
 
 
 def admin_required(func):
-
+    # Exige un JWT valide ET un claim role == "admin"
     @wraps(func)
     def wrapper(*args, **kwargs):
 

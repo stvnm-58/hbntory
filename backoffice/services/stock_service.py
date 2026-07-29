@@ -18,6 +18,7 @@ def get_stock(stock_id):
 
 
 def create_stock(data):
+    # branch_id et product_sku sont requis, quantity vaut 0 par défaut
 
 
     stock = Stock(

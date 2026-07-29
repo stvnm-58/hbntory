@@ -7,6 +7,7 @@ PRODUCT_API_URL = "http://localhost:5001/api/v1/products/search"
 
 
 def search_products(query):
+    # Combine les résultats de l'API produits externe avec le stock local par SKU
 
     # Appel API externe produits
 

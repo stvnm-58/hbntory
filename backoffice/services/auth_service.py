@@ -6,7 +6,7 @@ from flask_jwt_extended import create_access_token
 
 
 def login_user(email, password):
-
+    # Retourne None si l'email est inconnu, supprimé, ou le mot de passe invalide
     user = User.query.filter_by(
         email=email,
         is_deleted=False
@@ -20,7 +20,7 @@ def login_user(email, password):
     if not user.check_password(password):
         return None
 
-
+    # Le rôle est embarqué dans le token pour être lu par admin_required sans requête DB
     token = create_access_token(
         identity=str(user.id),
         additional_claims={
@@ -43,7 +43,7 @@ def create_user(
     role="employee",
     branch_id=None
 ):
-
+    # Unicité de l'email : renvoie None si un compte existe déjà (même soft-deleted)
     existing = User.query.filter_by(
         email=email
     ).first()
