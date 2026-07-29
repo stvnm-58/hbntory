@@ -20,7 +20,7 @@ function renderResults(results) {
     produitCell.textContent = item.name; 
 
     const succursaleCell = document.createElement("td");
-    succursaleCell.textContent = item.branch_name;
+    succursaleCell.textContent = item.branch_id;
 
     const quantiteCell = document.createElement("td");
     quantiteCell.textContent = item.quantity;
@@ -30,12 +30,30 @@ function renderResults(results) {
     detailsBtn.type = "button";
     detailsBtn.className = "link-btn";
     detailsBtn.textContent = "Voir";
-    detailsBtn.dataset.id = item.sku;
+    detailsBtn.addEventListener("click", () => openDetailsModal(item));
     detailsCell.appendChild(detailsBtn);
 
     row.append(produitCell, succursaleCell, quantiteCell, detailsCell);
     tbody.appendChild(row);
   });
+}
+
+// Modal de détails (bouton "Voir") : affiche les champs déjà présents dans
+// le résultat de recherche, sans appel réseau supplémentaire.
+function openDetailsModal(item) {
+  document.getElementById("details-name").textContent = item.name;
+  document.getElementById("details-sku").textContent = item.sku;
+  document.getElementById("details-category").textContent = item.category ?? "—";
+  document.getElementById("details-price").textContent =
+    item.unit_price != null ? `${item.unit_price} €` : "—";
+  document.getElementById("details-branch").textContent = item.branch_id ?? "—";
+  document.getElementById("details-quantity").textContent = item.quantity;
+
+  document.getElementById("details-overlay").hidden = false;
+}
+
+function closeDetailsModal() {
+  document.getElementById("details-overlay").hidden = true;
 }
 
 // GET /api/search?q=... : renvoie [] (plutôt que de faire planter l'UI) si
@@ -67,4 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Charge le catalogue complet au chargement de la page (query vide).
   performSearch("");
+
+  const overlay = document.getElementById("details-overlay");
+  document.getElementById("details-close").addEventListener("click", closeDetailsModal);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeDetailsModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !overlay.hidden) closeDetailsModal();
+  });
 });
