@@ -9,6 +9,7 @@ search_bp = Blueprint(
 )
 
 
+# strict_slashes=False : /api/search et /api/search/ répondent tous les deux
 search_bp.route(
     "/",
     methods=["GET"],

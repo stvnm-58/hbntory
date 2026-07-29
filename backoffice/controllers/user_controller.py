@@ -10,8 +10,7 @@ from services.user_service import (
 
 
 def get_users():
-
-
+    # CRUD utilisateurs (hors création, gérée par auth_controller.register)
     users = get_all_users()
 
 

@@ -22,7 +22,8 @@ user_bp = Blueprint(
 )
 
 
-
+# Liste, modification et suppression réservées aux admins ; la fiche d'un
+# utilisateur est accessible à tout utilisateur authentifié
 user_bp.route(
     "/",
     methods=["GET"]

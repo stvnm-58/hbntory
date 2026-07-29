@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
-
+    # Compte d'accès au backoffice (admin ou employee, rattaché à une branche)
     __tablename__ = "users"
 
 
@@ -39,6 +39,7 @@ class User(db.Model):
     )
 
 
+    # Soft delete : les users supprimés restent en base mais filtrés par user_service
     is_deleted = db.Column(
         db.Boolean,
         default=False
@@ -46,7 +47,7 @@ class User(db.Model):
 
 
     def set_password(self,password):
-
+        # Hash le mot de passe, jamais stocké en clair
         self.password_hash = generate_password_hash(password)
 
 

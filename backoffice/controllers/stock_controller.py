@@ -13,7 +13,7 @@ from services.stock_service import (
 
 
 def get_stocks():
-
+    # CRUD stock : ces fonctions sont montées sur /api/stocks avec jwt_required_custom
     stocks = get_all_stocks()
 
 

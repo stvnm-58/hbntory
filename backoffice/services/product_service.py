@@ -5,8 +5,7 @@ from config import Config
 
 
 def get_product(product_sku):
-
-
+    # Récupère les infos d'un produit auprès du microservice produits externe
     url = (
         f"{Config.PRODUCT_API_URL}"
         f"/products/{product_sku}"

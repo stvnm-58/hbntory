@@ -5,9 +5,8 @@ from flask_jwt_extended import JWTManager
 
 
 def login():
-
+    # Authentifie l'utilisateur et renvoie un token JWT en cas de succès
     data = request.json
-
 
     result = login_user(
         data["email"],
@@ -31,9 +30,8 @@ def login():
 
 
 def register():
-
+    # Crée un compte utilisateur ; le rôle par défaut est "employee"
     data = request.json
-
 
     user = create_user(
 

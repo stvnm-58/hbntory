@@ -4,7 +4,7 @@ from database.db import db
 
 
 def get_all_users():
-
+    # Les utilisateurs soft-deleted sont exclus de toutes les lectures
     return User.query.filter_by(
         is_deleted=False
     ).all()

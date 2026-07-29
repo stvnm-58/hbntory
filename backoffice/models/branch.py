@@ -2,7 +2,7 @@ from database.db import db
 
 
 class Branch(db.Model):
-
+    # Succursale : possède des utilisateurs et des stocks associés
     __tablename__ = "branches"
 
 

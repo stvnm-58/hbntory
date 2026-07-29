@@ -26,6 +26,8 @@ stock_bp = Blueprint(
     __name__
 )
 
+# Toutes les routes de stock exigent un JWT valide (pas de restriction de rôle)
+
 
 
 

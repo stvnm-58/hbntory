@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Stock(db.Model):
-
+    # Quantité d'un produit (identifié par SKU externe) disponible dans une branche
     __tablename__ = "stocks"
 
 

@@ -1,6 +1,9 @@
+# Script à lancer manuellement (`python database/seed.py`) pour repartir
+# d'une base vierge avec des données de démo (2 branches, 2 users, 2 stocks)
 import sys
 import os
 
+# Ajoute la racine du projet au PYTHONPATH pour pouvoir importer app/models
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -28,7 +31,7 @@ app = create_app()
 
 with app.app_context():
 
-
+    # Attention : supprime toutes les tables existantes avant de les recréer
     db.drop_all()
 
     db.create_all()

@@ -11,7 +11,7 @@ from routes.search_routes import search_bp
 
 
 def create_app():
-
+    # Factory Flask : permet de recréer une app fraîche pour les tests / le seed
     app = Flask(__name__)
 
     app.config.from_object(Config)
@@ -19,7 +19,7 @@ def create_app():
     db.init_app(app)
     JWTManager(app)
 
-
+    # Un blueprint par domaine métier, monté sous /api/<domaine>
     app.register_blueprint(
         auth_bp,
         url_prefix="/api/auth"
@@ -42,14 +42,14 @@ def create_app():
 
 
     with app.app_context():
-
+        # Import nécessaire pour que SQLAlchemy connaisse les modèles avant create_all
         from models import user, branch, stock
 
         db.create_all()
 
-
     @app.after_request
     def add_cors_headers(response):
+        # CORS ouvert à tous les domaines : à restreindre avant mise en production
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
