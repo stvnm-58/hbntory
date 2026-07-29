@@ -20,7 +20,7 @@ function renderResults(results) {
     produitCell.textContent = item.name; 
 
     const succursaleCell = document.createElement("td");
-    succursaleCell.textContent = item.branch_id;
+    succursaleCell.textContent = item.branch_name ?? "—";
 
     const quantiteCell = document.createElement("td");
     quantiteCell.textContent = item.quantity;
@@ -46,7 +46,7 @@ function openDetailsModal(item) {
   document.getElementById("details-category").textContent = item.category ?? "—";
   document.getElementById("details-price").textContent =
     item.unit_price != null ? `${item.unit_price} €` : "—";
-  document.getElementById("details-branch").textContent = item.branch_id ?? "—";
+  document.getElementById("details-branch").textContent = item.branch_name ?? "—";
   document.getElementById("details-quantity").textContent = item.quantity;
 
   document.getElementById("details-overlay").hidden = false;
