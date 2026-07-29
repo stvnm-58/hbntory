@@ -1,5 +1,4 @@
-# Controllers d'authentification : connexion et inscription, montés sur
-# /api/auth par routes/auth_routes.py
+# Authentification : connexion et inscription (montés sur /api/auth)
 from flask import request, jsonify
 
 from services.auth_service import login_user, create_user
@@ -7,62 +6,29 @@ from flask_jwt_extended import JWTManager
 
 
 def login():
-    # Authentifie l'utilisateur et renvoie un token JWT en cas de succès
+    # Vérifie email/mot de passe et renvoie un token JWT
     data = request.json
 
-    result = login_user(
-        data["email"],
-        data["password"]
-    )
-
+    result = login_user(data["email"], data["password"])
 
     if not result:
+        return jsonify({"error": "Invalid credentials"}), 401
 
-        return jsonify(
-            {
-                "error": "Invalid credentials"
-            }
-        ),401
-
-
-    return jsonify(result),200
-
-
-
+    return jsonify(result), 200
 
 
 def register():
-    # Crée un compte utilisateur ; le rôle par défaut est "employee"
+    # Crée un compte utilisateur (rôle "employee" par défaut)
     data = request.json
 
     user = create_user(
-
         email=data["email"],
-
         password=data["password"],
-
-        role=data.get(
-            "role",
-            "employee"
-        ),
-
-        branch_id=data.get(
-            "branch_id"
-        )
-
+        role=data.get("role", "employee"),
+        branch_id=data.get("branch_id")
     )
 
     if not user:
+        return jsonify({"error": "Email already exists"}), 409
 
-        return jsonify(
-            {
-                "error":
-                "Email already exists"
-            }
-        ),409
-
-
-
-    return jsonify(
-        user.to_dict()
-    ),201
+    return jsonify(user.to_dict()), 201

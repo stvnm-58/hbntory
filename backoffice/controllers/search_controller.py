@@ -1,12 +1,11 @@
-# Controller de recherche produits, monté sur /api/search (accessible sans
-# authentification : utilisé par le catalogue public et par le backoffice)
+# Recherche produits, monté sur /api/search (accès public, sans authentification)
 from flask import request, jsonify
 
 from services.search_service import search_products
 
 
 def search():
-    # Recherche produit : délègue à l'API externe puis croise avec le stock local
+    # Recherche un produit via l'API externe puis croise avec le stock local
     query = request.args.get("q", "").strip()
 
     try:

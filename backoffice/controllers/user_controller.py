@@ -1,5 +1,4 @@
-# Controllers CRUD pour les utilisateurs, montés sur /api/users. Les routes
-# de liste/modification/suppression exigent le rôle admin (voir user_routes.py)
+# CRUD des utilisateurs, monté sur /api/users (liste/modif/suppression réservées aux admins)
 from flask import request, jsonify
 
 from services.user_service import (
@@ -10,99 +9,38 @@ from services.user_service import (
 )
 
 
-
 def get_users():
-    # CRUD utilisateurs (hors création, gérée par auth_controller.register)
+    # Liste tous les utilisateurs
     users = get_all_users()
 
-
-    return jsonify(
-        [
-            user.to_dict()
-            for user in users
-        ]
-    )
-
-
-
+    return jsonify([user.to_dict() for user in users])
 
 
 def get_user(user_id):
-    # Récupère un utilisateur par son id (accessible à tout utilisateur connecté)
-
-    user = get_user_by_id(
-        user_id
-    )
-
+    # Récupère un utilisateur par id
+    user = get_user_by_id(user_id)
 
     if not user:
+        return jsonify({"error": "User not found"}), 404
 
-        return jsonify(
-            {
-                "error":"User not found"
-            }
-        ),404
-
-
-
-    return jsonify(
-        user.to_dict()
-    )
-
-
-
+    return jsonify(user.to_dict())
 
 
 def update_user_controller(user_id):
-    # Met à jour email/rôle/succursale d'un utilisateur (réservé aux admins)
-
-    user = update_user(
-        user_id,
-        request.json
-    )
-
+    # Met à jour email/rôle/succursale d'un utilisateur
+    user = update_user(user_id, request.json)
 
     if not user:
+        return jsonify({"error": "User not found"}), 404
 
-        return jsonify(
-            {
-                "error":
-                "User not found"
-            }
-        ),404
-
-
-
-    return jsonify(
-        user.to_dict()
-    )
-
-
-
+    return jsonify(user.to_dict())
 
 
 def delete_user_controller(user_id):
-    # Soft delete d'un utilisateur (réservé aux admins)
-
-    result = delete_user(
-        user_id
-    )
-
+    # Supprime (soft delete) un utilisateur
+    result = delete_user(user_id)
 
     if not result:
+        return jsonify({"error": "User not found"}), 404
 
-        return jsonify(
-            {
-                "error":
-                "User not found"
-            }
-        ),404
-
-
-
-    return jsonify(
-        {
-            "message":
-            "User deleted"
-        }
-    )
+    return jsonify({"message": "User deleted"})
