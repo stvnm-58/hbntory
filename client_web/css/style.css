@@ -440,6 +440,58 @@ main {
   gap: 1rem;
 }
 
+/* admin.html : gestion des employés en colonne de gauche, à côté du stock,
+   pour éviter d'avoir à défiler jusqu'en bas de la page pour la gérer */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  align-items: start;
+  gap: 1.5rem;
+  max-width: 1200px;
+}
+
+.employees-panel {
+  position: sticky;
+  top: 1.25rem;
+}
+
+.employees-panel .inline-form {
+  flex-direction: column;
+}
+
+/* Largeur "auto" par défaut = les cellules refusent de passer à la ligne et
+   débordent hors du panneau (trop étroit pour un email en entier sur une
+   ligne). Largeur fixe + colonnes dimensionnées = ça wrap au lieu de déborder. */
+.employees-panel .data-table {
+  table-layout: fixed;
+}
+
+.employees-panel .data-table th:nth-child(1),
+.employees-panel .data-table td:nth-child(1) {
+  width: 55%;
+  overflow-wrap: break-word;
+}
+
+.employees-panel .data-table th:nth-child(2),
+.employees-panel .data-table td:nth-child(2) {
+  width: 20%;
+}
+
+.employees-panel .data-table th:nth-child(3),
+.employees-panel .data-table td:nth-child(3) {
+  width: 25%;
+}
+
+@media (max-width: 820px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .employees-panel {
+    position: static;
+  }
+}
+
 .btn {
   padding: 0.55rem 1.1rem;
   border-radius: var(--radius-sm);
