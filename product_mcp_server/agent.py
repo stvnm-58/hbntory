@@ -6,7 +6,21 @@ from langchain_ollama import ChatOllama
 from langgraph.prebuilt import create_react_agent
 
 async def run_agent(user_query: str):
-    # 1. Configuration du serveur MCP
+    """
+    Exécute un agent ReAct (LangGraph + Ollama) capable d'utiliser les outils 
+    exposés par un serveur MCP (Model Context Protocol) via STDIO.
+
+    Args:
+        user_query (str): La requête ou question posée par l'utilisateur.
+
+    Returns:
+        str: Le contenu textuel du dernier message généré par l'agent (la réponse finale).
+        
+    Note (Gestion des exceptions) :
+        Cette fonction ne contient pas de bloc `try...except` explicite. En cas d'erreur
+        (ex: serveur MCP introuvable, échec d'initialisation Ollama, délai dépassé),
+        l'exception est directement levée et propagée vers l'appelant (comme l'API FastAPI).
+    """
     server_params = StdioServerParameters(
         command="python3",
         args=["server.py"]
