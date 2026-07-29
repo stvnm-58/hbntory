@@ -33,14 +33,12 @@ Le projet est organisé autour de plusieurs services :
 
 ```text
 hbntory/
-├── ai_service/             # documentation et services IA associés
 ├── api_extern/             # API externe de produits
 ├── backoffice/             # application Flask de gestion interne
 ├── client_web/             # interface web statique
 ├── docs/                   # documentation complémentaire
 ├── product_mcp_server/     # serveur MCP + agent IA
 ├── dev.sh                  # script de lancement de la stack complète
-├── docker-compose.yml      # configuration Docker pour certains services
 └── README.md               # ce fichier
 ```
 
