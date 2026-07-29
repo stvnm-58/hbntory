@@ -20,7 +20,7 @@ function renderResults(results) {
     produitCell.textContent = item.name; 
 
     const succursaleCell = document.createElement("td");
-    succursaleCell.textContent = item.branch_name ?? "—";
+    succursaleCell.textContent = item.branch_id ?? "—";
 
     const quantiteCell = document.createElement("td");
     quantiteCell.textContent = item.quantity;
