@@ -1,3 +1,8 @@
+/* Feuille de style unique, partagée par les 4 pages (index/catalogue/admin/stock).
+   Organisée en sections : variables + reset, en-tête/layout, recherche +
+   tableaux, chat (fil + bulle flottante), éléments partagés des dashboards,
+   puis le thème sombre propre à la page de connexion (.auth-page). */
+
 :root {
   --color-bg: #f8fafc;
   --color-surface: #eef2fb;
@@ -32,6 +37,8 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
 }
+
+/* En-tête et layout partagés (toutes les pages sauf .auth-page) */
 
 .brand-mark {
   display: inline-flex;
@@ -84,6 +91,8 @@ main {
   max-width: 900px;
   margin: 0 auto;
 }
+
+/* Recherche (catalogue.html) + tableaux de données (partagés avec les dashboards) */
 
 .toolbar {
   margin-bottom: 0.85rem;
@@ -163,6 +172,9 @@ main {
   color: var(--color-text-soft);
   font-size: 0.88rem;
 }
+
+/* Fil de conversation du chat : partagé entre le panneau flottant (catalogue.html)
+   et sa version .chat-panel .thread ci-dessous */
 
 .thread {
   display: flex;
@@ -295,6 +307,9 @@ main {
   outline-offset: 2px;
 }
 
+/* Bulle de chat déplaçable + panneau (position gérée en JS dans chat.js, le
+   CSS ne fixe que l'apparence) */
+
 .chat-bubble {
   position: fixed;
   top: 0;
@@ -392,6 +407,9 @@ main {
   padding: 0.6rem;
   border-top: 1px solid var(--color-border);
 }
+
+/* Éléments partagés des dashboards admin.html / stock.html (en-tête,
+   boutons, formulaires en ligne, cartes de section) */
 
 .login-link {
   position: fixed;
@@ -519,6 +537,9 @@ main {
   font: inherit;
   font-size: 0.85rem;
 }
+
+/* Thème sombre propre à la page de connexion (index.html) — variables
+   --auth-* isolées de la palette --color-* utilisée partout ailleurs */
 
 .auth-page {
   --auth-bg-1: #24262b;

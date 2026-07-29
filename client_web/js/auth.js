@@ -1,4 +1,9 @@
+// Contrôleur de la page de connexion (index.html). Dépend de app.js chargé
+// avant lui (API_BASE_URL, getSession/setSession).
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Si une session existe déjà, on saute directement le formulaire pour
+  // éviter de reconnecter un utilisateur déjà authentifié.
   const existing = getSession();
   if (existing) {
     window.location.href = existing.user.role === "admin" ? "admin.html" : "stock.html";
@@ -19,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.disabled = true;
 
     try {
+      // Appel direct (pas apiFetch) : il n'y a pas encore de session/token à
+      // ce stade, et une erreur ici doit rester sur la page plutôt que
+      // rediriger vers index.html comme le ferait apiFetch sur un 401.
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

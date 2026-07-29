@@ -1,3 +1,6 @@
+// Contrôleur de admin.html : stock en lecture seule (pas d'inputs/CRUD, à la
+// différence de stock-manager.js) + gestion des comptes employés.
+
 function renderStock(stocks) {
   const tbody = document.getElementById("stock-body");
   const emptyState = document.getElementById("stock-empty");
@@ -100,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("employee-password").value;
     const branchValue = document.getElementById("employee-branch").value;
 
+    // Règle métier : un identifiant sans "@" est un nom d'utilisateur libre,
+    // limité à 12 caractères ; un email n'a pas cette limite.
     if (!identifier.includes("@") && identifier.length > 12) {
       errorEl.textContent = "Un nom (sans email) ne doit pas dépasser 12 caractères.";
       errorEl.hidden = false;

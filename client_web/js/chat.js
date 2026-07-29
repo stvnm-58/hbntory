@@ -1,3 +1,7 @@
+// Widget de chat flottant (catalogue.html) : bulle déplaçable au pointeur qui
+// s'accroche au bord gauche/droit de l'écran, + panneau de conversation qui
+// appelle product_mcp_server (service séparé du backoffice, cf. AI_SERVICE_URL).
+
 function appendMessage(role, text) {
   const thread = document.getElementById("chat-thread");
 
@@ -45,6 +49,8 @@ function resolveBubble(bubble, role, text) {
   thread.scrollTop = thread.scrollHeight;
 }
 
+// Service IA distinct du backoffice (uvicorn, cf. dev.sh) — pas de gestion de
+// session/token ici, cet endpoint n'est pas protégé par apiFetch.
 const AI_SERVICE_URL = "http://localhost:8000";
 
 async function askBot(question) {
@@ -69,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
 
-  const EDGE_MARGIN = 20;
-  const DRAG_THRESHOLD = 6;
+  const EDGE_MARGIN = 20; // distance minimale gardée entre la bulle/le panneau et les bords de la fenêtre
+  const DRAG_THRESHOLD = 6; // en pixels : sépare un simple clic d'un déplacement (voir endDrag)
 
   let dragging = false;
   let moved = false;
@@ -184,6 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
     placeBubbleAt(bubbleStartX + dx, bubbleStartY + dy);
   });
 
+  // Un pointerdown+pointerup sans dépasser DRAG_THRESHOLD est traité comme un
+  // clic (ouvre/ferme le panneau) ; au-delà, comme un glisser-déposer qui se
+  // termine par un magnétisme vers le bord le plus proche.
   function endDrag(event) {
     if (!dragging || event.pointerId !== pointerId) return;
     dragging = false;

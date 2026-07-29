@@ -1,3 +1,7 @@
+// Chargé en premier sur chaque page : config partagée + helpers de session/API
+// utilisés ensuite par auth.js, search.js, chat.js, admin.js et stock-manager.js.
+
+// Doit correspondre au port sur lequel tourne backoffice/app.py (voir dev.sh).
 const API_BASE_URL = "http://localhost:5050";
 const AUTH_STORAGE_KEY = "hbntory_auth";
 
@@ -20,6 +24,9 @@ function clearSession() {
   localStorage.removeItem(AUTH_STORAGE_KEY);
 }
 
+// Garde d'accès appelée au chargement de admin.html/stock.html : redirige vers
+// index.html si personne n'est connecté, ou vers l'espace correspondant si le
+// rôle connecté ne correspond pas à celui attendu par la page.
 function requireSession(role) {
   const session = getSession();
 
@@ -36,6 +43,9 @@ function requireSession(role) {
   return session;
 }
 
+// Wrapper fetch commun à tout le front : préfixe API_BASE_URL, attache le
+// token JWT s'il y en a un, et déconnecte automatiquement sur un 401 (token
+// expiré ou invalide) pour éviter de laisser l'utilisateur sur un état cassé.
 async function apiFetch(path, options = {}) {
   const session = getSession();
 

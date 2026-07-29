@@ -8,21 +8,23 @@ HTML / CSS / JS simple, sans framework ni dépendance, sans étape de build.
 
 ```
 client_web/
-├── index.html              # page publique : recherche + chat (pas de connexion requise)
-├── login.html               # connexion (email/nom + mot de passe)
-├── admin.html                # espace admin : stock en lecture seule + gestion des employés
-├── stock.html                # espace employé : stock avec ajout / modification / suppression
+├── index.html                 # connexion (email/nom + mot de passe) — page servie à la racine "/"
+├── catalogue.html              # page publique : recherche + chat (pas de connexion requise)
+├── admin.html                    # espace admin : stock en lecture seule + gestion des employés
+├── stock.html                     # espace employé : stock avec ajout / modification / suppression
 ├── css/
-│   └── style.css              # feuille de style unique, partagée par toutes les pages
+│   └── style.css                   # feuille de style unique, partagée par toutes les pages
 ├── js/
-│   ├── app.js                  # config partagée (API_BASE_URL), apiFetch, gestion de session
-│   ├── search.js                # tableau de résultats de recherche (index.html)
-│   ├── chat.js                   # bulle déplaçable + panneau de chat (index.html)
-│   ├── auth.js                    # formulaire de connexion (login.html)
-│   ├── admin.js                    # stock en lecture seule + CRUD employés (admin.html)
-│   └── stock-manager.js             # CRUD stock (stock.html)
-└── assets/
+│   ├── app.js                       # config partagée (API_BASE_URL), apiFetch, gestion de session
+│   ├── auth.js                       # formulaire de connexion (index.html)
+│   ├── search.js                      # tableau de résultats de recherche (catalogue.html)
+│   ├── chat.js                         # bulle déplaçable + panneau de chat (catalogue.html)
+│   ├── admin.js                         # stock en lecture seule + CRUD employés (admin.html)
+│   └── stock-manager.js                  # CRUD stock (stock.html)
+└── assets/                            # vide pour l'instant (images, icônes…)
 ```
+
+Chaque page HTML charge `js/app.js` en premier (il définit `API_BASE_URL` et les helpers de session utilisés par tous les autres scripts), suivi du/des script(s) propre(s) à la page.
 
 ## Lancer en local
 
@@ -44,12 +46,14 @@ Puis ouvrir `http://localhost:8080` dans un navigateur.
 
 | Page | Accès | Rôle requis | Contenu |
 |---|---|---|---|
-| `index.html` | public | aucun | recherche produits/stock + chat IA |
-| `login.html` | public | aucun | connexion, redirige selon le rôle |
+| `index.html` | public | aucun | connexion, redirige selon le rôle après succès |
+| `catalogue.html` | public | aucun | recherche produits/stock + chat IA |
 | `admin.html` | authentifié | `admin` | stock en **lecture seule** + liste des employés (ajout / suppression) |
 | `stock.html` | authentifié | `employee` | stock en **lecture/écriture** (ajout, modification de quantité, suppression) |
 
 Un admin ne peut pas modifier le stock directement — seulement consulter et gérer les comptes employés. Un employé ne voit pas la gestion des employés — seulement le stock, avec droit d'écriture complet.
+
+**Navigation entre les pages** : `catalogue.html` est la seule page à avoir un lien vers une autre (« Connexion » → `index.html`). Aucune page ne renvoie vers `catalogue.html` — c'est une page d'accueil publique autonome, atteinte uniquement en tapant son URL directement (elle n'est pas liée depuis le flux de connexion). `index.html` étant le fichier servi à la racine du site (`/`), c'est la page de connexion qui s'affiche par défaut sur `http://localhost:8080/`.
 
 ### Connexion
 
@@ -64,9 +68,9 @@ Comptes de test (créés par `backoffice/database/seed.py`) :
 
 ### Session
 
-Après connexion, `js/app.js` stocke `{ token, user }` dans `localStorage` (clé `hbntory_auth`). Toutes les requêtes faites via `apiFetch` (dans `app.js`) attachent automatiquement le header `Authorization: Bearer <token>` si une session existe, et redirigent vers `login.html` en cas de réponse `401`.
+Après connexion, `js/app.js` stocke `{ token, user }` dans `localStorage` (clé `hbntory_auth`). Toutes les requêtes faites via `apiFetch` (dans `app.js`) attachent automatiquement le header `Authorization: Bearer <token>` si une session existe, et redirigent vers `index.html` en cas de réponse `401`.
 
-`requireSession(role)` (dans `app.js`) protège `admin.html` et `stock.html` : sans session valide ou avec le mauvais rôle, l'utilisateur est redirigé vers la page appropriée (`login.html`, `admin.html` ou `stock.html`).
+`requireSession(role)` (dans `app.js`) protège `admin.html` et `stock.html` : sans session valide ou avec le mauvais rôle, l'utilisateur est redirigé vers la page appropriée (`index.html`, `admin.html` ou `stock.html`).
 
 ## Exemples de questions (chat)
 
@@ -77,10 +81,12 @@ Après connexion, `js/app.js` stocke `{ token, user }` dans `localStorage` (clé
 
 ## État de l'intégration
 
-- La recherche (`js/search.js`) appelle `GET /api/search` sur le backoffice (`API_BASE_URL`, port 5050) ; un champ vide renvoie tout le catalogue, trié par nom.
-- Le chat (`js/chat.js`) appelle `POST /ask` sur `product_mcp_server` (`AI_SERVICE_URL`, port 8000, en dur dans le fichier).
-- La connexion, le stock et les employés passent par le backoffice (`/api/auth`, `/api/stocks`, `/api/users`).
+- La recherche (`js/search.js`, sur `catalogue.html`) appelle `GET /api/search` sur le backoffice (`API_BASE_URL`, port 5050) ; un champ vide renvoie tout le catalogue, trié par nom. Le backoffice relaie lui-même vers l'API produits externe (`api_extern`, port 5001) puis croise avec le stock local.
+- Le chat (`js/chat.js`, sur `catalogue.html`) appelle `POST /ask` sur `product_mcp_server` (`AI_SERVICE_URL`, port 8000, en dur dans le fichier).
+- La connexion (`js/auth.js`), le stock (`js/admin.js`, `js/stock-manager.js`) et les employés (`js/admin.js`) passent tous par le backoffice via `apiFetch` (`/api/auth`, `/api/stocks`, `/api/users`).
+
+Les trois services (`backoffice`, `api_extern`, `product_mcp_server`) doivent tourner en parallèle pour que le front soit pleinement fonctionnel — voir `./dev.sh` à la racine du projet.
 
 ### Bug backend connu (bloquant pour le login)
 
-Le hashing des mots de passe (`werkzeug.security.check_password_hash`) utilise `scrypt` par défaut, qui n'est pas supporté par la version d'OpenSSL/LibreSSL de l'environnement Python actuel — le login échoue avec `AttributeError: module 'hashlib' has no attribute 'scrypt'`. Pas encore corrigé côté backend au moment de la rédaction de ce README.
+Le hashing des mots de passe (`werkzeug.security.check_password_hash`, côté `backoffice`) utilise `scrypt` par défaut, qui n'est pas supporté par la version d'OpenSSL/LibreSSL de l'environnement Python actuel — le login échoue avec `AttributeError: module 'hashlib' has no attribute 'scrypt'`. Rien à corriger côté front : ce point est purement backend (voir `backoffice/models/user.py`), et pas encore résolu au moment de la rédaction de ce README.

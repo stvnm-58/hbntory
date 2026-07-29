@@ -1,3 +1,6 @@
+// Contrôleur de stock.html (rôle "employee") : CRUD complet sur le stock, à
+// la différence de admin.js qui n'affiche le stock qu'en lecture seule.
+
 function renderStock(stocks) {
   const tbody = document.getElementById("stock-body");
   const emptyState = document.getElementById("stock-empty");
@@ -53,6 +56,8 @@ async function updateQuantity(stockId, input) {
     });
   } catch (error) {
     console.error(error);
+    // En cas d'échec, on recharge depuis le serveur pour annuler la valeur
+    // tapée localement et éviter que l'UI affiche une quantité non persistée.
     loadStock();
   }
 }

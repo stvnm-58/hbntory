@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <!--
+    Espace admin (js/admin.js). Accès protégé côté client par
+    requireSession("admin") dans app.js : redirige vers index.html si aucune
+    session, ou vers stock.html si connecté en tant qu'employé. Stock affiché
+    en lecture seule ; seule la gestion des employés est modifiable ici.
+  -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Espace Admin – Stock and CO</title>

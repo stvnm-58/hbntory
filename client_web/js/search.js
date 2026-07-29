@@ -1,3 +1,6 @@
+// Contrôleur de la recherche publique (catalogue.html). Dépend de app.js
+// pour apiFetch ; ne nécessite pas de session (page publique).
+
 function renderResults(results) {
   const tbody = document.getElementById("results-body");
   const emptyState = document.getElementById("empty-state");
@@ -35,6 +38,8 @@ function renderResults(results) {
   });
 }
 
+// GET /api/search?q=... : renvoie [] (plutôt que de faire planter l'UI) si
+// le backoffice ou l'API produits externe qu'il interroge est indisponible.
 async function fetchResults(query) {
   try {
     return await apiFetch(`/api/search?q=${encodeURIComponent(query)}`);
@@ -54,9 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(results);
   }
 
+  // Pas de debounce : chaque frappe déclenche un appel réseau. Volontairement
+  // simple ici, mais à surveiller si le catalogue devient volumineux.
   input.addEventListener("input", () => {
     performSearch(input.value.trim());
   });
 
+  // Charge le catalogue complet au chargement de la page (query vide).
   performSearch("");
 });

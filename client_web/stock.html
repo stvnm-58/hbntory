@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <!--
+    Espace employé (js/stock-manager.js). Accès protégé côté client par
+    requireSession("employee") dans app.js : redirige vers index.html si
+    aucune session, ou vers admin.html si connecté en tant qu'admin. CRUD
+    complet sur le stock, à la différence de la vue lecture seule de admin.html.
+  -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gestion du stock – Stock and CO</title>

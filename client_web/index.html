@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <!--
+    Page de connexion, servie à la racine du site ("/"). Redirige vers
+    admin.html ou stock.html selon le rôle renvoyé par POST /api/auth/login
+    (voir js/auth.js). La page publique de recherche/chat est catalogue.html,
+    atteinte uniquement via son URL directe (pas de lien depuis ici).
+  -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Connexion – Stock and CO</title>
