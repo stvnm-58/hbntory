@@ -15,7 +15,9 @@ from utils.decorators import (
 )
 
 
-
+# Routes CRUD pour les utilisateurs, montées sous /api/users.
+# Liste/modification/suppression réservées aux admins ; le détail est
+# accessible à tout utilisateur connecté.
 user_bp = Blueprint(
     "users",
     __name__
@@ -32,7 +34,7 @@ user_bp.route(
 )
 
 
-
+# GET /api/users/<id> : détail d'un utilisateur (tout utilisateur connecté)
 user_bp.route(
     "/<int:user_id>",
     methods=["GET"]
@@ -41,7 +43,7 @@ user_bp.route(
 )
 
 
-
+# PUT /api/users/<id> : met à jour un utilisateur (admin uniquement)
 user_bp.route(
     "/<int:user_id>",
     methods=["PUT"]
@@ -50,7 +52,7 @@ user_bp.route(
 )
 
 
-
+# DELETE /api/users/<id> : soft delete d'un utilisateur (admin uniquement)
 user_bp.route(
     "/<int:user_id>",
     methods=["DELETE"]

@@ -40,7 +40,7 @@ PRODUCTS_FILE = os.path.join(
 
 
 def load_product_skus():
-
+    # Lit tous les SKU du fichier products.json du container api_extern
     with open(PRODUCTS_FILE) as f:
         data = json.load(f)
 

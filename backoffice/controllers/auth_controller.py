@@ -1,3 +1,5 @@
+# Controllers d'authentification : connexion et inscription, montés sur
+# /api/auth par routes/auth_routes.py
 from flask import request, jsonify
 
 from services.auth_service import login_user, create_user

@@ -1,3 +1,4 @@
+# Décorateurs de protection des routes Flask par JWT (auth simple ou rôle admin)
 from functools import wraps
 
 from flask import jsonify

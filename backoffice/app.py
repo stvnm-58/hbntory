@@ -1,3 +1,5 @@
+# Point d'entrée de l'API backoffice : assemble la config, la base et les
+# blueprints (auth, users, stocks, search) en une application Flask.
 from flask import Flask
 from flask_jwt_extended import JWTManager
 
@@ -60,7 +62,7 @@ def create_app():
 
 
 if __name__ == "__main__":
-
+    # Lancement en local uniquement : le serveur de dev Flask, pas pour la prod
     app = create_app()
 
     app.run(

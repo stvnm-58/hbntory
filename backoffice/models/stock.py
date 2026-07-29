@@ -46,7 +46,7 @@ class Stock(db.Model):
 
 
     def to_dict(self):
-
+        # Sérialisation JSON utilisée par les controllers
         return {
 
             "id": self.id,

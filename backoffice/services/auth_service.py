@@ -1,3 +1,4 @@
+# Logique métier pour la connexion et la création de comptes utilisateurs
 from models.user import User
 from database.db import db
 

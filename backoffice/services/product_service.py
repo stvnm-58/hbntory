@@ -1,3 +1,4 @@
+# Client HTTP vers l'API produits externe (container Docker api_extern)
 import requests
 
 from config import Config

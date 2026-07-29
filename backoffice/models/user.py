@@ -53,7 +53,7 @@ class User(db.Model):
 
 
     def check_password(self,password):
-
+        # Vérifie un mot de passe en clair contre le hash stocké
         return check_password_hash(
             self.password_hash,
             password
@@ -62,7 +62,7 @@ class User(db.Model):
 
 
     def to_dict(self):
-
+        # Sérialisation JSON utilisée par les controllers (pas de password_hash exposé)
         return {
 
             "id": self.id,

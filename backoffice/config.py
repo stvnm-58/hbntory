@@ -1,3 +1,5 @@
+# Configuration centralisée de l'app Flask, lue depuis les variables
+# d'environnement (fichier .env) avec des valeurs par défaut pour le dev local.
 import os
 from dotenv import load_dotenv
 

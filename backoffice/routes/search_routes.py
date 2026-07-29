@@ -1,3 +1,5 @@
+# Route de recherche produits, montée sous /api/search. Publique (pas de
+# jwt_required) : utilisée par le catalogue visiteur ET par le backoffice.
 from flask import Blueprint
 
 from controllers.search_controller import search
