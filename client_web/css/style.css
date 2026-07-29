@@ -730,12 +730,13 @@ main {
   margin-top: 0.6rem;
 }
 
-.auth-guest-link {
+.auth-guest-link,
+.auth-guest-link:visited {
   display: inline-block;
   margin-top: 1.5rem;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--auth-text-soft);
+  color: var(--auth-text);
   text-decoration: underline;
 }
 
