@@ -1,13 +1,21 @@
+# Script à lancer manuellement (`python database/seed.py`) pour repartir
+# d'une base vierge avec des données de démo (2 branches, 2 users, du stock
+# pour tout le catalogue produits de l'API externe)
 import sys
 import os
+import json
+import random
 
-sys.path.append(
+# Ajoute la racine du projet au PYTHONPATH pour pouvoir importer app/models
+BACKOFFICE_ROOT = os.path.dirname(
     os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(__file__)
-        )
+        os.path.abspath(__file__)
     )
 )
+
+REPO_ROOT = os.path.dirname(BACKOFFICE_ROOT)
+
+sys.path.append(BACKOFFICE_ROOT)
 
 
 from app import create_app
@@ -19,6 +27,24 @@ from models import (
     Branch,
     Stock
 )
+
+
+# Catalogue produits servi par le container Docker api_extern : on s'en sert
+# comme source des SKU à stocker pour ne pas les dupliquer à la main ici
+PRODUCTS_FILE = os.path.join(
+    REPO_ROOT,
+    "api_extern",
+    "data",
+    "products.json"
+)
+
+
+def load_product_skus():
+
+    with open(PRODUCTS_FILE) as f:
+        data = json.load(f)
+
+    return [product["sku"] for product in data["products"]]
 
 
 
@@ -109,29 +135,20 @@ with app.app_context():
 
 
 
+    # Un stock par produit et par branche, avec une quantité pseudo-aléatoire
+    # mais reproductible (seed fixe) pour que les démos restent stables
+    rng = random.Random(42)
+
+    skus = load_product_skus()
+
     stocks = [
-
         Stock(
-
-            branch_id=bordeaux.id,
-
-            product_sku="SKU001",
-
-            quantity=50
-
-        ),
-
-
-        Stock(
-
-            branch_id=paris.id,
-
-            product_sku="SKU002",
-
-            quantity=20
-
+            branch_id=branch.id,
+            product_sku=sku,
+            quantity=rng.randint(0, 80)
         )
-
+        for branch in (bordeaux, paris)
+        for sku in skus
     ]
 
 
