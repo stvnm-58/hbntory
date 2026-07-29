@@ -1,11 +1,14 @@
+# Controllers CRUD pour les succursales (branches). Non montés sur une route
+# pour l'instant : aucun blueprint routes/branch_routes.py ne les expose encore.
 from flask import request, jsonify
 
 from database.db import db
 from models.branch import Branch
 
 def get_branches():
+    # Liste toutes les succursales
     branches = Branch.query.all()
-    
+
     return jsonify([
         {
             "id": branch.id,
@@ -16,7 +19,7 @@ def get_branches():
     ]), 200
 
 def get_branch(branch_id):
-    
+    # Récupère une succursale par son id
     branch = Branch.query.get(branch_id)
     
     if not branch:
@@ -31,7 +34,7 @@ def get_branch(branch_id):
     }), 200
 
 def create_branch():
-
+    # Crée une succursale (name requis, location optionnelle)
     data = request.get_json()
 
     if not data:
@@ -65,7 +68,7 @@ def create_branch():
     }), 201
 
 def update_branch(branch_id):
-
+    # Met à jour le nom et/ou la localisation d'une succursale existante
     branch = Branch.query.get(branch_id)
 
     if not branch:
@@ -88,7 +91,7 @@ def update_branch(branch_id):
     }), 200
 
 def delete_branch(branch_id):
-
+    # Supprime définitivement une succursale (pas de soft delete ici)
     branch = Branch.query.get(branch_id)
 
     if not branch:

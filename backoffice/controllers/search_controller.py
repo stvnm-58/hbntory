@@ -1,3 +1,5 @@
+# Controller de recherche produits, monté sur /api/search (accessible sans
+# authentification : utilisé par le catalogue public et par le backoffice)
 from flask import request, jsonify
 
 from services.search_service import search_products

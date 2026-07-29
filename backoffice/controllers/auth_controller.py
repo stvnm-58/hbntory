@@ -1,3 +1,5 @@
+# Controllers d'authentification : connexion et inscription, montés sur
+# /api/auth par routes/auth_routes.py
 from flask import request, jsonify
 
 from services.auth_service import login_user, create_user
@@ -5,7 +7,7 @@ from flask_jwt_extended import JWTManager
 
 
 def login():
-
+    # Vérifie email/mot de passe et renvoie un JWT + les infos utilisateur
     data = request.json
 
 
@@ -31,7 +33,7 @@ def login():
 
 
 def register():
-
+    # Crée un nouvel utilisateur (rôle "employee" par défaut si non précisé)
     data = request.json
 
 

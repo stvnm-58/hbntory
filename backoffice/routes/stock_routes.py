@@ -20,15 +20,15 @@ from controllers.stock_controller import (
 from utils.decorators import jwt_required_custom
 
 
-
+# Routes CRUD pour le stock, montées sous /api/stocks.
+# Toutes exigent un JWT valide (pas de restriction de rôle particulière).
 stock_bp = Blueprint(
     "stocks",
     __name__
 )
 
 
-
-
+# GET /api/stocks/ : liste tout le stock
 stock_bp.route(
     "/",
     methods=["GET"]
@@ -37,8 +37,7 @@ stock_bp.route(
 )
 
 
-
-
+# GET /api/stocks/<id> : détail d'une ligne de stock
 stock_bp.route(
     "/<int:stock_id>",
     methods=["GET"]
@@ -47,8 +46,7 @@ stock_bp.route(
 )
 
 
-
-
+# POST /api/stocks/ : crée une ligne de stock
 stock_bp.route(
     "/",
     methods=["POST"]
@@ -57,8 +55,7 @@ stock_bp.route(
 )
 
 
-
-
+# PUT /api/stocks/<id> : met à jour la quantité
 stock_bp.route(
     "/<int:stock_id>",
     methods=["PUT"]
@@ -67,8 +64,7 @@ stock_bp.route(
 )
 
 
-
-
+# DELETE /api/stocks/<id> : supprime une ligne de stock
 stock_bp.route(
     "/<int:stock_id>",
     methods=["DELETE"]

@@ -1,12 +1,16 @@
+# Combine le catalogue produits externe (Docker) et le stock local par SKU :
+# c'est ce service qui alimente le catalogue visiteur et la recherche backoffice
 import requests
 
 from models.stock import Stock
 
 
+# NOTE : URL en dur plutôt que Config.PRODUCT_API_URL (utilisé par product_service)
 PRODUCT_API_URL = "http://localhost:5001/api/v1/products/search"
 
 
 def search_products(query):
+    # Combine les résultats de l'API produits externe avec le stock local par SKU
 
     # Appel API externe produits
 

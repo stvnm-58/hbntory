@@ -1,24 +1,25 @@
+# Logique métier CRUD pour le stock (accès direct aux modèles SQLAlchemy)
 from models.stock import Stock
 from database.db import db
 
 
 
 def get_all_stocks():
-
+    # Renvoie toutes les lignes de stock, toutes succursales confondues
     return Stock.query.all()
 
 
 
 
 def get_stock(stock_id):
-
+    # Renvoie une ligne de stock par id, ou None si absente
     return Stock.query.get(stock_id)
 
 
 
 
 def create_stock(data):
-
+    # branch_id et product_sku sont requis, quantity vaut 0 par défaut
 
     stock = Stock(
 
@@ -45,7 +46,7 @@ def create_stock(data):
 
 
 def update_stock(stock_id, data):
-
+    # Met à jour la quantité d'une ligne de stock existante
 
     stock = get_stock(stock_id)
 
@@ -70,7 +71,7 @@ def update_stock(stock_id, data):
 
 
 def delete_stock(stock_id):
-
+    # Supprime définitivement une ligne de stock
 
     stock = get_stock(stock_id)
 

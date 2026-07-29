@@ -1,3 +1,4 @@
+# Décorateurs de protection des routes Flask par JWT (auth simple ou rôle admin)
 from functools import wraps
 
 from flask import jsonify
@@ -10,6 +11,7 @@ from flask_jwt_extended import (
 
 
 def jwt_required_custom(func):
+    # Exige un JWT valide (peu importe le rôle) pour accéder à la route
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -38,6 +40,7 @@ def jwt_required_custom(func):
 
 
 def admin_required(func):
+    # Exige un JWT valide ET le rôle "admin" dans ses claims
 
     @wraps(func)
     def wrapper(*args, **kwargs):

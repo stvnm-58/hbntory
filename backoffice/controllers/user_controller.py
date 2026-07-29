@@ -1,3 +1,5 @@
+# Controllers CRUD pour les utilisateurs, montés sur /api/users. Les routes
+# de liste/modification/suppression exigent le rôle admin (voir user_routes.py)
 from flask import request, jsonify
 
 from services.user_service import (
@@ -10,7 +12,7 @@ from services.user_service import (
 
 
 def get_users():
-
+    # Liste tous les utilisateurs non supprimés (réservé aux admins)
 
     users = get_all_users()
 
@@ -27,7 +29,7 @@ def get_users():
 
 
 def get_user(user_id):
-
+    # Récupère un utilisateur par son id (accessible à tout utilisateur connecté)
 
     user = get_user_by_id(
         user_id
@@ -53,7 +55,7 @@ def get_user(user_id):
 
 
 def update_user_controller(user_id):
-
+    # Met à jour email/rôle/succursale d'un utilisateur (réservé aux admins)
 
     user = update_user(
         user_id,
@@ -81,7 +83,7 @@ def update_user_controller(user_id):
 
 
 def delete_user_controller(user_id):
-
+    # Soft delete d'un utilisateur (réservé aux admins)
 
     result = delete_user(
         user_id

@@ -3,7 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
-
+    # Compte utilisateur du backoffice (admin ou employee), rattaché à une
+    # succursale ; mot de passe stocké hashé, jamais en clair
     __tablename__ = "users"
 
 
@@ -46,13 +47,13 @@ class User(db.Model):
 
 
     def set_password(self,password):
-
+        # Hash et stocke le mot de passe (jamais en clair en base)
         self.password_hash = generate_password_hash(password)
 
 
 
     def check_password(self,password):
-
+        # Vérifie un mot de passe en clair contre le hash stocké
         return check_password_hash(
             self.password_hash,
             password
@@ -61,7 +62,7 @@ class User(db.Model):
 
 
     def to_dict(self):
-
+        # Sérialisation JSON utilisée par les controllers (pas de password_hash exposé)
         return {
 
             "id": self.id,

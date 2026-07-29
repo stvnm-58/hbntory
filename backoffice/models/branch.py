@@ -2,7 +2,7 @@ from database.db import db
 
 
 class Branch(db.Model):
-
+    # Succursale physique (magasin/entrepôt) : possède des utilisateurs et du stock
     __tablename__ = "branches"
 
 
@@ -39,7 +39,7 @@ class Branch(db.Model):
 
 
     def to_dict(self):
-
+        # Sérialisation JSON utilisée par les controllers
         return {
 
             "id": self.id,

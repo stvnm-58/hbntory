@@ -1,3 +1,4 @@
+# Logique métier pour la connexion et la création de comptes utilisateurs
 from models.user import User
 from database.db import db
 
@@ -6,7 +7,7 @@ from flask_jwt_extended import create_access_token
 
 
 def login_user(email, password):
-
+    # Vérifie email/mot de passe et génère un JWT si valides, sinon None
     user = User.query.filter_by(
         email=email,
         is_deleted=False
@@ -43,7 +44,7 @@ def create_user(
     role="employee",
     branch_id=None
 ):
-
+    # Crée un utilisateur si l'email n'est pas déjà pris, sinon renvoie None
     existing = User.query.filter_by(
         email=email
     ).first()

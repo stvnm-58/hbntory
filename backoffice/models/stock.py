@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Stock(db.Model):
-
+    # Quantité d'un produit (identifié par SKU externe) disponible dans une branche
     __tablename__ = "stocks"
 
 
@@ -46,7 +46,7 @@ class Stock(db.Model):
 
 
     def to_dict(self):
-
+        # Sérialisation JSON utilisée par les controllers
         return {
 
             "id": self.id,
