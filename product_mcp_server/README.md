@@ -1,70 +1,124 @@
-# 📦 Serveur MCP & Agent IA - Catalogue Produits
+# Product MCP Server
 
-Ce module fournit un agent IA (LangChain/LangGraph + Ollama) interconnecté via le protocole MCP (Model Context Protocol) à une API externe pour interroger le catalogue produit.
+Ce dossier contient un service d'assistance IA dédié au catalogue produit de HBntory. Il combine trois briques principales :
 
----
+- un serveur MCP exposant un outil pour interroger un catalogue externe,
+- un agent IA basé sur LangGraph et Ollama,
+- une API FastAPI permettant d'envoyer des questions depuis un front-end ou un client HTTP.
 
-## 🛠️ PRÉREQUIS
+## Objectif
 
-Avant de commencer, assure-toi d'avoir installé sur ta machine :
+Le but de ce module est de permettre à un utilisateur de poser une question naturelle sur un produit, par exemple :
 
-* **Python 3.10+**
-* **Docker** (pour exécuter l'API externe du catalogue)
-* **Ollama** (avec le modèle **Qwen** téléchargé)
+- “Donne-moi les détails du produit HB-LAP-1001”
+- “Quel est le prix du produit X ?”
 
----
+L'agent utilise alors l'outil MCP pour récupérer les informations depuis l'API externe du catalogue.
 
-## 🚀 INSTALLATION & DÉMARRAGE RAPIDE
+## Architecture
 
-### 1. Récupérer le code à jour
+Le projet est organisé autour de trois fichiers principaux :
 
-`git pull origin main`  
-`cd product_mcp_server`
+- [app.py](app.py) : API FastAPI qui reçoit les requêtes HTTP et retourne une réponse structurée.
+- [agent.py](agent.py) : orchestration de l'agent ReAct avec LangGraph et Ollama, via un serveur MCP lancé en STDIO.
+- [server.py](server.py) : serveur MCP qui expose l'outil de récupération des produits.
 
-### 2. Configurer l'environnement virtuel Python
+## Prérequis
 
-Créer le venv (si ce n'est pas déjà fait) :  
-`python3 -m venv venv`
+Avant de démarrer, assurez-vous d'avoir :
 
-Activer le venv :  
-* Linux / WSL / macOS : `source venv/bin/activate`  
-* Windows (PowerShell) : `.\venv\Scripts\Activate.ps1`  
+- Python 3.10+
+- un environnement virtuel Python
+- Ollama installé et un modèle disponible (par exemple qwen2.5)
+- l'API externe du catalogue accessible sur http://localhost:5001
 
-Installer les dépendances :  
-`pip install -r requirements.txt`
+## Installation
 
-### 3. Lancer l'API Externe (Docker)
+Depuis la racine du dossier :
 
-Assure-toi que le conteneur Docker fourni pour l'exercice tourne bien sur le port **5001** :
-* L'API doit être accessible sur : `http://localhost:5001`
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux / macOS / WSL
+# ou : .\venv\Scripts\Activate.ps1  # Windows PowerShell
+pip install -r requirements.txt
+```
 
-### 4. Lancer Ollama avec Qwen
+## Variables d'environnement
 
-Assure-toi que le service Ollama tourne et que le modèle Qwen est bien disponible :  
-`ollama run qwen` (ou la version spécifique utilisée, ex: `qwen2.5`)
+Le serveur MCP peut utiliser la variable suivante :
 
-### 5. Lancer l'API FastAPI
+- EXTERNAL_API_URL : URL de base de l'API externe du catalogue
+  - valeur par défaut : http://localhost:5001
 
-Dans ton terminal (avec l'environnement virtuel `.venv` activé) :  
-`uvicorn app:app --host 0.0.0.0 --port 8000 --reload`
+## Démarrage
 
-Le serveur sera prêt lorsque tu verras la ligne :  
-`INFO: Application startup complete.`
+### 1. Vérifier l'API externe
 
----
+Assurez-vous que l'API du catalogue est bien disponible sur :
 
-## 📡 UTILISATION DE L'API (INTÉGRATION FRONT-END)
+```text
+http://localhost:5001
+```
 
-L'API expose un point d'entrée HTTP POST pour envoyer des requêtes à l'agent :
+### 2. Vérifier Ollama
 
-* **URL :** `http://localhost:8000/api/chat`
-* **Méthode :** `POST`
-* **Headers :** `Content-Type: application/json`
+Assurez-vous que le modèle utilisé par l'agent est disponible, par exemple :
 
-### Exemple de corps de requête (Payload) :
+```bash
+ollama run qwen2.5:1.5b
+```
 
-`{ "message": "Donne-moi les détails du produit HB-LAP-1001" }`
+### 3. Lancer l'API FastAPI
 
-### Exemple de réponse JSON :
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
 
-`{ "response": "Détails du produit du catalogue externe :\n- SKU : HB-LAP-1001\n- Nom : Portable Pro...\n" }`
+L'API sera alors disponible sur :
+
+```text
+http://localhost:8000
+```
+
+## Utilisation de l'API
+
+### Endpoint
+
+```http
+POST /ask
+Content-Type: application/json
+```
+
+### Exemple de requête
+
+```json
+{
+  "question": "Donne-moi les détails du produit HB-LAP-1001"
+}
+```
+
+### Exemple de réponse
+
+```json
+{
+  "answer": "Détails du produit du catalogue externe :\n- SKU : HB-LAP-1001\n- Nom : Portable Pro..."
+}
+```
+
+## Structure du dossier
+
+```text
+product_mcp_server/
+├── app.py
+├── agent.py
+├── server.py
+├── requirements.txt
+├── README.md
+└── tests/
+```
+
+## Notes
+
+- L'agent appelle l'outil MCP via STDIO.
+- Les erreurs réseau ou d'API externe sont gérées de manière explicite pour éviter de faire planter l'application.
+- En cas de problème, vérifiez d'abord la disponibilité de l'API externe et du service Ollama.
