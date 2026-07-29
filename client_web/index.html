@@ -5,7 +5,7 @@
     Page de connexion, servie à la racine du site ("/"). Redirige vers
     admin.html ou stock.html selon le rôle renvoyé par POST /api/auth/login
     (voir js/auth.js). La page publique de recherche/chat est catalogue.html,
-    atteinte uniquement via son URL directe (pas de lien depuis ici).
+    reliée ci-dessous pour les visiteurs sans compte.
   -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +28,8 @@
 
       <button type="submit">Se connecter</button>
     </form>
+
+    <a class="auth-guest-link" href="catalogue.html">Consulter le stock sans compte</a>
   </main>
 
   <script src="js/app.js"></script>

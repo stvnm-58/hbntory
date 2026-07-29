@@ -53,7 +53,7 @@ Puis ouvrir `http://localhost:8080` dans un navigateur.
 
 Un admin ne peut pas modifier le stock directement — seulement consulter et gérer les comptes employés. Un employé ne voit pas la gestion des employés — seulement le stock, avec droit d'écriture complet.
 
-**Navigation entre les pages** : `catalogue.html` est la seule page à avoir un lien vers une autre (« Connexion » → `index.html`). Aucune page ne renvoie vers `catalogue.html` — c'est une page d'accueil publique autonome, atteinte uniquement en tapant son URL directement (elle n'est pas liée depuis le flux de connexion). `index.html` étant le fichier servi à la racine du site (`/`), c'est la page de connexion qui s'affiche par défaut sur `http://localhost:8080/`.
+**Navigation entre les pages** : `catalogue.html` a un lien vers `index.html` (« Connexion »), et `index.html` a un lien retour vers `catalogue.html` (« Consulter le stock sans compte »). `index.html` étant le fichier servi à la racine du site (`/`), c'est la page de connexion qui s'affiche par défaut sur `http://localhost:8080/`, avec un accès direct au catalogue public pour les visiteurs sans compte.
 
 ### Connexion
 

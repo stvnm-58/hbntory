@@ -663,6 +663,19 @@ main {
   margin-top: 0.6rem;
 }
 
+.auth-guest-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--auth-text-soft);
+  text-decoration: underline;
+}
+
+.auth-guest-link:hover {
+  color: var(--auth-accent);
+}
+
 .auth-form input {
   width: 100%;
   padding: 0.65rem 0.8rem;
